@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using School.Data;
+
 namespace School
 {
     public class Program
@@ -8,6 +11,12 @@ namespace School
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //Inject datacontext
+            builder.Services.AddDbContext<DataContext>(o =>
+            {
+                o.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection"));
+            });
 
             var app = builder.Build();
 
