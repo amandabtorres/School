@@ -7,16 +7,18 @@ namespace School
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            var builder = WebApplication.CreateBuilder(args);            
 
             //Inject datacontext
             builder.Services.AddDbContext<DataContext>(o =>
             {
                 o.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection"));
             });
+
+            builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+
+            // Add services to the container.
+            builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
 

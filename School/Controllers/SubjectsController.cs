@@ -12,17 +12,18 @@ namespace School.Controllers
 {
     public class SubjectsController : Controller
     {
-        private readonly DataContext _context;
+        private readonly ISubjectRepository _subjectRepository;
 
-        public SubjectsController(DataContext context)
+        public SubjectsController(ISubjectRepository subjectRepository)
         {
-            _context = context;
+           
+            _subjectRepository = subjectRepository;
         }
 
         // GET: Subjects
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Subjects.ToListAsync());
+            return View(_subjectRepository.GetAll().OrderBy(s => s.Name));
         }
 
         // GET: Subjects/Details/5
@@ -33,8 +34,8 @@ namespace School.Controllers
                 return NotFound();
             }
 
-            var subject = await _context.Subjects
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var subject = await _subjectRepository.GetByIdAsync(id.Value);
+                
             if (subject == null)
             {
                 return NotFound();
@@ -54,12 +55,11 @@ namespace School.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,Workload")] Subject subject)
+        public async Task<IActionResult> Create(Subject subject)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(subject);
-                await _context.SaveChangesAsync();
+                await _subjectRepository.CreateAsync(subject);               
                 return RedirectToAction(nameof(Index));
             }
             return View(subject);
@@ -73,7 +73,7 @@ namespace School.Controllers
                 return NotFound();
             }
 
-            var subject = await _context.Subjects.FindAsync(id);
+            var subject = await _subjectRepository.GetByIdAsync(id.Value);
             if (subject == null)
             {
                 return NotFound();
@@ -86,7 +86,7 @@ namespace School.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,Workload")] Subject subject)
+        public async Task<IActionResult> Edit(int id, Subject subject)
         {
             if (id != subject.Id)
             {
@@ -96,13 +96,12 @@ namespace School.Controllers
             if (ModelState.IsValid)
             {
                 try
-                {
-                    _context.Update(subject);
-                    await _context.SaveChangesAsync();
+                {                                       
+                    await _subjectRepository.UpdateAsync(subject);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SubjectExists(subject.Id))
+                    if (!await _subjectRepository.ExistAsync(subject.Id))
                     {
                         return NotFound();
                     }
@@ -124,8 +123,7 @@ namespace School.Controllers
                 return NotFound();
             }
 
-            var subject = await _context.Subjects
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var subject = await _subjectRepository.GetByIdAsync(id.Value);
             if (subject == null)
             {
                 return NotFound();
@@ -139,19 +137,11 @@ namespace School.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var subject = await _context.Subjects.FindAsync(id);
-            if (subject != null)
-            {
-                _context.Subjects.Remove(subject);
-            }
-
-            await _context.SaveChangesAsync();
+            var subject = await _subjectRepository.GetByIdAsync(id);
+            await _subjectRepository.DeleteAsync(subject);            
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SubjectExists(int id)
-        {
-            return _context.Subjects.Any(e => e.Id == id);
-        }
+        
     }
 }
