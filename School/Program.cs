@@ -1,5 +1,8 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using School.Data;
+using School.Data.Entities;
+using School.Helpers;
 
 namespace School
 {
@@ -7,8 +10,20 @@ namespace School
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);        
+            var builder = WebApplication.CreateBuilder(args);
 
+            builder.Services.AddIdentity<User, IdentityRole>(cfg =>
+            {
+                cfg.User.RequireUniqueEmail = true;
+                cfg.Password.RequireDigit = false;
+                cfg.Password.RequiredUniqueChars = 0;
+                cfg.Password.RequireUppercase = false;
+                cfg.Password.RequireLowercase = false;
+                cfg.Password.RequireNonAlphanumeric = false;
+                cfg.Password.RequiredLength = 6;
+
+            })
+                .AddEntityFrameworkStores<DataContext>();
 
             //Inject datacontext
             builder.Services.AddDbContext<DataContext>(o =>
@@ -18,6 +33,7 @@ namespace School
 
             builder.Services.AddTransient<SeedDb>();
             builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
+            builder.Services.AddScoped<IUserHelper, UserHelper>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
@@ -38,6 +54,8 @@ namespace School
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

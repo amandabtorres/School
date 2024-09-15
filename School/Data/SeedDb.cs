@@ -1,21 +1,47 @@
 ﻿
+using Microsoft.AspNetCore.Identity;
 using School.Data.Entities;
+using School.Helpers;
 
 namespace School.Data
 {
     public class SeedDb
     {
         private readonly DataContext _context;
-        
+        private readonly IUserHelper _userHelper;
 
-        public SeedDb(DataContext context)
+        public SeedDb(DataContext context, IUserHelper userHelper)
         {
             _context = context;
+            _userHelper = userHelper;
         }
 
         public async Task SeedAsync()
         {
             await _context.Database.EnsureCreatedAsync();
+
+            var user = await _userHelper.GetUserByEmailAsync("banaszeskiamanda@gmail.com");
+            if (user == null)
+            {
+                user = new User
+                {
+                    FirstName = "Amanda",
+                    LastName = "Torres",
+                    DateBirth = new DateTime(1993, 01, 05),
+                    Email = "banaszeskiamanda@gmail.com",
+                    UserName = "banaszeskiamanda@gmail.com",
+                    PhoneNumber = "123456789",
+                    Address = "Rua Jau 33",
+                    PostalCode = "2700-700",
+                    Nif = "123321213"
+                };
+                var result = await _userHelper.AddUserAsync(user, "123456");
+                if (result != IdentityResult.Success)
+                {
+                    throw new InvalidOperationException("Could not create the user in seeder");
+                }
+            }
+
 
             if (!_context.Subjects.Any())
             {
