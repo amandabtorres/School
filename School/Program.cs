@@ -7,7 +7,8 @@ namespace School
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);            
+            var builder = WebApplication.CreateBuilder(args);        
+
 
             //Inject datacontext
             builder.Services.AddDbContext<DataContext>(o =>
@@ -15,12 +16,15 @@ namespace School
                 o.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection"));
             });
 
+            builder.Services.AddTransient<SeedDb>();
             builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
+
+            RunSeeding(app);
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -42,6 +46,17 @@ namespace School
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
             app.Run();
+        }
+
+        private static void RunSeeding(IHost host)
+        {
+            var scopeFactory = host.Services.GetService<IServiceScopeFactory>();
+
+            using (var scope = scopeFactory.CreateScope())
+            {
+                var seeder = scope.ServiceProvider.GetService<SeedDb>();
+                seeder.SeedAsync().Wait();
+            }
         }
     }
 }
