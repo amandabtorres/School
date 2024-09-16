@@ -1,15 +1,18 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using School.Data.Entities;
+using School.Models;
 
 namespace School.Helpers
 {
     public class UserHelper : IUserHelper
     {
         private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public UserHelper(UserManager<User> userManager)
+        public UserHelper(UserManager<User> userManager, SignInManager<User> signInManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
         }
 
 
@@ -21,6 +24,20 @@ namespace School.Helpers
         public async Task<User> GetUserByEmailAsync(string email)
         {
             return await _userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<SignInResult> LoginAsync(LoginViewModel model)
+        {
+            return await _signInManager.PasswordSignInAsync(
+                model.Username,
+                model.Password,
+                model.RememberMe,
+                false);
+        }
+
+        public async Task LogoutAsync()
+        {
+            await _signInManager.SignOutAsync();
         }
     }
 }
