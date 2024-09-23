@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using School.Data.Entities;
+using System.Diagnostics.Metrics;
 
 namespace School.Data
 {
@@ -12,5 +13,14 @@ namespace School.Data
         {
             
         }
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<User>()
+        //        .HasIndex(c => c.Email)
+        //        .IsUnique();
+
+        //    base.OnModelCreating(modelBuilder);
+        //}
     }
 }

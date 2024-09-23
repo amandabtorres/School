@@ -15,7 +15,6 @@ namespace School.Helpers
             _signInManager = signInManager;
         }
 
-
         public async Task<IdentityResult> AddUserAsync(User user, string password)
         {
             return await _userManager.CreateAsync(user, password);
