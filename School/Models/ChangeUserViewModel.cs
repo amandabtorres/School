@@ -2,9 +2,9 @@
 
 namespace School.Models
 {
-    public class UserViewModel
-    {       
-        
+    public class ChangeUserViewModel
+    {
+
         [Required]
         [Display(Name = "First Name")]
         [MaxLength(50, ErrorMessage = "The field {0} only can contain {1} characters.")]

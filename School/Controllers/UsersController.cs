@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using School.Data;
 using School.Data.Entities;
@@ -29,11 +30,11 @@ namespace School.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(UserViewModel model)
+        public async Task<IActionResult> Register(RegisterNewUserViewModel model)
         {
             if (ModelState.IsValid)
             {
-                var user = _userRepository.GetUserByEmail(model.Username);
+                var user = await _userHelper.GetUserByEmailAsync(model.Username);                    
                 if (user == null) 
                 {
                     user = new User
@@ -41,31 +42,38 @@ namespace School.Controllers
                         FirstName = model.FirstName,
                         LastName = model.LastName,
                         DateBirth = model.DateBirth,
-                        Email = model.Username,                        
+                        Email = model.Username,      
+                        UserName = model.Username,
                         Address = model.Address,
                         PhoneNumber = model.PhoneNumber,
                         PostalCode = model.PostalCode,
                         Nif = model.Nif
                     };
-                     _userRepository.Add(user);
-                    await _userRepository.SaveAllAsync();
+                    var result = await _userHelper.AddUserAsync(user, model.Password);
+                    if(result != IdentityResult.Success)
+                    {
+                        ModelState.AddModelError(string.Empty, "The user couldn't be created.");
+                        return View(model);
+                    }                   
                     return RedirectToAction("Index");
                 }
-                //avisar que o email ja esta sendo usado
+                ModelState.AddModelError(string.Empty, "The user is already being used.");
+                return View(model);
             }
             return View(model);
         }
 
         [HttpGet]
-        public IActionResult Edit(string id)
+        public async  Task<IActionResult> Edit(string id)
         {
             if(id == null)
             {
                 return NotFound();
             }
 
-            var user = _userRepository.GetUserById(id);
-            var model = new UserViewModel();
+            var user = await _userHelper.GetUserByIdAsync(id);              
+                
+            var model = new ChangeUserViewModel();
             if (user != null)
             {
                 model.FirstName = user.FirstName;
@@ -79,16 +87,15 @@ namespace School.Controllers
 
                 return View(model);
             }
-            return NotFound();
-           
+            return NotFound();           
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(UserViewModel model)
+        public async Task<IActionResult> Edit(ChangeUserViewModel model)
         {            
             if (ModelState.IsValid)
-            {   
-                var user = _userRepository.GetUserByEmail(model.Username);
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Username);                    
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
                 user.DateBirth = model.DateBirth;                
@@ -96,29 +103,33 @@ namespace School.Controllers
                 user.PhoneNumber = model.PhoneNumber;
                 user.PostalCode = model.PostalCode;
                 user.Nif = model.Nif;
-                try
-                {   
-                    _userRepository.Update(user);
-                    await _userRepository.SaveAllAsync();
-                }
-                catch (Exception)
+               
+                var response = await _userHelper.UpdateUserAsync(user);
+                if (response.Succeeded)
                 {
-                    return NotFound();
+                    if (this.User.Identity.Name == user.Email)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+                    ViewBag.UserMessage = "User updated!";
+                    return RedirectToAction("Index");
                 }
-                return RedirectToAction("Index");               
-                
+                else
+                {
+                    ModelState.AddModelError(string.Empty, response.Errors.FirstOrDefault().Description);
+                }
             }   
             return View(model);
         }
 
-        public IActionResult Delete(string? id)
+        public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var user = _userRepository.GetUserById(id);
+            var user = await _userHelper.GetUserByIdAsync(id);
             if (user == null) 
             {
                 return NotFound();
@@ -130,9 +141,8 @@ namespace School.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
-            var user = _userRepository.GetUserById(id);
-            _userRepository.Delete(user);
-            await _userRepository.SaveAllAsync();
+            var user = await _userHelper.GetUserByIdAsync(id);
+            await _userHelper.DeleteUserAsync(user); 
             return RedirectToAction("Index");
         }
     }
