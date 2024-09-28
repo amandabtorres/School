@@ -112,5 +112,7 @@ namespace School.Controllers
             await _userHelper.DeleteUserAsync(user); 
             return RedirectToAction("Index");
         }
+
+
     }
 }
