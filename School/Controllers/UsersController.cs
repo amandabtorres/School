@@ -6,6 +6,7 @@ using School.Data.Entities;
 using School.Helpers;
 using School.Models;
 using System.Net;
+using Vereyon.Web;
 
 namespace School.Controllers
 {
@@ -13,66 +14,21 @@ namespace School.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IUserHelper _userHelper;
+        private readonly IFlashMessage _flashMessage;
 
-        public UsersController(IUserRepository userRepository, IUserHelper userHelper)
+        public UsersController(
+            IUserRepository userRepository, 
+            IUserHelper userHelper,
+            IFlashMessage flashMessage)
         {
             _userRepository = userRepository;
             _userHelper = userHelper;
+            _flashMessage = flashMessage;
         }
         public IActionResult Index()
         {
             return View(_userRepository.GetAll());
-        }
-
-        public IActionResult Register()
-        {
-            var model = new RegisterNewUserViewModel
-            {
-                Roles = _userHelper.GetComboRoles()
-            };
-            return View(model);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterNewUserViewModel model)
-        {
-            model.Roles = _userHelper.GetComboRoles();
-
-            if (ModelState.IsValid)
-            {
-                var user = await _userHelper.GetUserByEmailAsync(model.Username);                    
-                if (user == null) 
-                {
-                    var selectedRole = model.Roles.FirstOrDefault(r => r.Value == model.RoleId.ToString());
-                    string roleUser = selectedRole.Text;
-
-                    user = new User
-                    {
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        DateBirth = model.DateBirth,
-                        Email = model.Username,      
-                        UserName = model.Username,
-                        Address = model.Address,
-                        PhoneNumber = model.PhoneNumber,
-                        PostalCode = model.PostalCode,
-                        Nif = model.Nif
-                    };
-                    var result = await _userHelper.AddUserAsync(user, model.Password);
-                    if(result != IdentityResult.Success)
-                    {
-                        ModelState.AddModelError(string.Empty, "The user couldn't be created.");
-                        return View(model);
-                    }
-                    await _userHelper.AddUserToRoleAsync(user, roleUser);
-                    return RedirectToAction("Index");
-                }
-                ModelState.AddModelError(string.Empty, "The user is already being used.");
-                return View(model);
-            }
-            //model.Roles = _userHelper.GetComboRoles();
-            return View(model);
-        }
+        }                
 
         [HttpGet]
         public async  Task<IActionResult> Edit(string id)

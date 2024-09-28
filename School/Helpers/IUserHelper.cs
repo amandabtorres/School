@@ -30,12 +30,16 @@ namespace School.Helpers
 
         IEnumerable<SelectListItem> GetComboRoles();
 
+        Task<string> GenerateEmailConfirmationTokenAsync(User user);
 
+        Task<IdentityResult> ConfirmEmailAsync(User user, string token);
 
 
 
 
         //----------
+
+
 
 
         Task<SignInResult> ValidatePasswordAsync(User user, string password);

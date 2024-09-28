@@ -1,16 +1,26 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using School.Data.Entities;
 using School.Helpers;
 using School.Models;
+using Vereyon.Web;
 
 namespace School.Controllers
 {
     public class AccountController : Controller
     {
         private readonly IUserHelper _userHelper;
+        private readonly IMailHelper _mailHelper;
+        private readonly IFlashMessage _flashMessage;
 
-        public AccountController(IUserHelper userHelper)
+        public AccountController(
+            IUserHelper userHelper,
+            IMailHelper mailHelper,
+            IFlashMessage flashMessage)
         {
             _userHelper = userHelper;
+            _mailHelper = mailHelper;
+            _flashMessage = flashMessage;
         }
         
         public IActionResult Login()
@@ -64,7 +74,7 @@ namespace School.Controllers
                     var result = await _userHelper.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
                     if (result.Succeeded)
                     {
-                        ViewBag.Message = "Password changed!";
+                        _flashMessage.Info("Password changed!");
                         return View(model);
                     }
                     else
@@ -85,9 +95,104 @@ namespace School.Controllers
             var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
             var userId = user.Id;
 
-            return RedirectToAction("Edit", "Users", new { id = userId });
-            
+            return RedirectToAction("Edit", "Users", new { id = userId });            
         }
+
+        public IActionResult Register()
+        {
+            var model = new RegisterNewUserViewModel
+            {
+                Roles = _userHelper.GetComboRoles()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterNewUserViewModel model)
+        {
+            model.Roles = _userHelper.GetComboRoles();
+
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Username);
+                if (user == null)
+                {
+                    var selectedRole = model.Roles.FirstOrDefault(r => r.Value == model.RoleId.ToString());
+                    string roleUser = selectedRole.Text;
+
+                    user = new User
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        DateBirth = model.DateBirth,
+                        Email = model.Username,
+                        UserName = model.Username,
+                        Address = model.Address,
+                        PhoneNumber = model.PhoneNumber,
+                        PostalCode = model.PostalCode,
+                        Nif = model.Nif
+                    };
+
+                    var result = await _userHelper.AddUserAsync(user, model.Password);
+                    if (result != IdentityResult.Success)
+                    {
+                        _flashMessage.Danger("The user couldn't be created.");                        
+                        return View(model);
+                    }
+                    await _userHelper.AddUserToRoleAsync(user, roleUser);
+
+                    string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                    string tokenLink = Url.Action( "ConfirmEmail", "Account", new
+                    {
+                        userid = user.Id,
+                        token = myToken
+                    }, protocol: HttpContext.Request.Scheme);                   
+
+                    Response response = _mailHelper.SendEmail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                        $"To allow the user, " +
+                        $"please click in this link: </br></br><a href = \"{tokenLink}\">Confirm Email</a>");
+
+                    if (response.IsSuccess)
+                    {
+                        _flashMessage.Info("The instructions to allow you user has been sent to email");                        
+                        return RedirectToAction("Index", "Users"); 
+                    }
+
+                    return View(model);
+                }
+                _flashMessage.Danger("The user is already being used.");               
+                return View(model);
+            }            
+            return View(model);
+        }
+
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return NotFound();
+            }
+
+            var user = await _userHelper.GetUserByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var result = await _userHelper.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+            {
+                return NotFound();
+            }
+
+            return View();
+
+        }
+
+
+
+
+
 
     }
 }

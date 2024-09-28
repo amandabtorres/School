@@ -6,8 +6,9 @@
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
 
 <h2>Users</h2>
+<flash dismissable= "true" />
 <p>
-    <a asp-action="Register" class="btn btn-primary">Register a new user</a>
+    <a asp-controller="Account" asp-action="Register" class="btn btn-primary">Register a new user</a>
 </p>
 <table class="display" id="myTable" style="width:100%">
     <thead>

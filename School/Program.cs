@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using School.Data;
 using School.Data.Entities;
 using School.Helpers;
+using Vereyon.Web;
 
 namespace School
 {
@@ -14,6 +15,8 @@ namespace School
 
             builder.Services.AddIdentity<User, IdentityRole>(cfg =>
             {
+                cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider;
+                cfg.SignIn.RequireConfirmedEmail = true;
                 cfg.User.RequireUniqueEmail = true;
                 cfg.Password.RequireDigit = false;
                 cfg.Password.RequiredUniqueChars = 0;
@@ -32,10 +35,13 @@ namespace School
                 o.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection"));
             });
 
+            builder.Services.AddFlashMessage();
+
             builder.Services.AddTransient<SeedDb>();
             builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
             builder.Services.AddScoped<IUserHelper, UserHelper>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+            builder.Services.AddScoped<IMailHelper, MailHelper>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
