@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using School.Data.Entities;
 
@@ -16,7 +17,7 @@ namespace School.Data
         public IEnumerable<User> GetAll()
         {
             return _context.Users.OrderBy(u => u.FirstName);
-        }       
-                
+        }
+
     }
 }

@@ -12,8 +12,7 @@ namespace School.Data.Entities
         public string LastName { get; set; }
 
 
-        [Display(Name = "Date of Birth")]
-        [DisplayFormat(DataFormatString = "{0:MM/dd/yyyy HH:mm}", ApplyFormatInEditMode = false)]
+        [Display(Name = "Date of Birth")]        
         public DateTime DateBirth { get; set; }
 
         public string Address { get; set; }

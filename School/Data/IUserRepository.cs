@@ -1,4 +1,5 @@
-﻿using School.Data.Entities;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using School.Data.Entities;
 
 namespace School.Data
 {
@@ -6,6 +7,6 @@ namespace School.Data
     {
        
         IEnumerable<User> GetAll();
-       
+        
     }
 }

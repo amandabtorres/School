@@ -26,17 +26,26 @@ namespace School.Controllers
 
         public IActionResult Register()
         {
-            return View();
+            var model = new RegisterNewUserViewModel
+            {
+                Roles = _userHelper.GetComboRoles()
+            };
+            return View(model);
         }
 
         [HttpPost]
         public async Task<IActionResult> Register(RegisterNewUserViewModel model)
         {
+            model.Roles = _userHelper.GetComboRoles();
+
             if (ModelState.IsValid)
             {
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);                    
                 if (user == null) 
                 {
+                    var selectedRole = model.Roles.FirstOrDefault(r => r.Value == model.RoleId.ToString());
+                    string roleUser = selectedRole.Text;
+
                     user = new User
                     {
                         FirstName = model.FirstName,
@@ -54,12 +63,14 @@ namespace School.Controllers
                     {
                         ModelState.AddModelError(string.Empty, "The user couldn't be created.");
                         return View(model);
-                    }                   
+                    }
+                    await _userHelper.AddUserToRoleAsync(user, roleUser);
                     return RedirectToAction("Index");
                 }
                 ModelState.AddModelError(string.Empty, "The user is already being used.");
                 return View(model);
             }
+            //model.Roles = _userHelper.GetComboRoles();
             return View(model);
         }
 

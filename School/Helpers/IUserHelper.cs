@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using School.Data.Entities;
 using School.Models;
+using System.Threading.Tasks;
 
 namespace School.Helpers
 {
@@ -20,11 +22,13 @@ namespace School.Helpers
 
         Task<IdentityResult> DeleteUserAsync(User user);
 
+        Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword);
 
+        Task CheckRoleAsync(string roleName);
 
+        Task AddUserToRoleAsync(User user, string roleName);
 
-
-
+        IEnumerable<SelectListItem> GetComboRoles();
 
 
 
@@ -33,11 +37,11 @@ namespace School.Helpers
 
         //----------
 
-       
-       
-
-        Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword);
 
         Task<SignInResult> ValidatePasswordAsync(User user, string password);
+
+        
+
+        Task<bool> IsUserInRoleAsync(User user, string roleName);
     }
 }

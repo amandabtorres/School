@@ -20,6 +20,11 @@ namespace School.Data
         {
             await _context.Database.EnsureCreatedAsync();
 
+            await _userHelper.CheckRoleAsync("Admin");
+            await _userHelper.CheckRoleAsync("Student");
+            await _userHelper.CheckRoleAsync("Employee");
+            await _userHelper.CheckRoleAsync("Teacher");
+
             var user = await _userHelper.GetUserByEmailAsync("banaszeskiamanda@gmail.com");
             if (user == null)
             {
@@ -40,6 +45,8 @@ namespace School.Data
                 {
                     throw new InvalidOperationException("Could not create the user in seeder");
                 }
+
+                await _userHelper.AddUserToRoleAsync(user, "Admin");
             }
 
 

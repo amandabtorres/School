@@ -23,6 +23,7 @@ namespace School
                 cfg.Password.RequiredLength = 6;
 
             })
+                .AddDefaultTokenProviders()
                 .AddEntityFrameworkStores<DataContext>();
 
             //Inject datacontext
