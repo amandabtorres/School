@@ -79,12 +79,6 @@
     </div>
 </div>
 
-<div class="text-success">
-    <p>
-        @ViewBag.Message
-    </p>
-</div>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -93,7 +87,8 @@
         $(document).ready(function () {
             $('.date').datepicker({
                 orientation: "bottom",
-                autoclose: true
+                autoclose: true,
+                  format: "dd/mm/yyyy"
             });
         });
 
