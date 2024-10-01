@@ -39,9 +39,11 @@ namespace School
 
             builder.Services.AddTransient<SeedDb>();
             builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
-            builder.Services.AddScoped<IUserHelper, UserHelper>();
+            builder.Services.AddScoped<IClassSchoolRepository, ClassSchoolRepository>();
+            
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IMailHelper, MailHelper>();
+            builder.Services.AddScoped<IUserHelper, UserHelper>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
