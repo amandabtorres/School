@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using School.Data;
 using School.Data.Entities;
+using School.Helpers;
 
 namespace School.Controllers
 {
@@ -31,14 +32,14 @@ namespace School.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("SubjectNotFound");
             }
 
             var subject = await _subjectRepository.GetByIdAsync(id.Value);
                 
             if (subject == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("SubjectNotFound");
             }
 
             return View(subject);
@@ -70,13 +71,13 @@ namespace School.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("SubjectNotFound");
             }
 
             var subject = await _subjectRepository.GetByIdAsync(id.Value);
             if (subject == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("SubjectNotFound");
             }
             return View(subject);
         }
@@ -90,7 +91,7 @@ namespace School.Controllers
         {
             if (id != subject.Id)
             {
-                return NotFound();
+                return new NotFoundViewResult("SubjectNotFound");
             }
 
             if (ModelState.IsValid)
@@ -103,7 +104,7 @@ namespace School.Controllers
                 {
                     if (!await _subjectRepository.ExistAsync(subject.Id))
                     {
-                        return NotFound();
+                        return new NotFoundViewResult("SubjectNotFound");
                     }
                     else
                     {
@@ -120,13 +121,13 @@ namespace School.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("SubjectNotFound");
             }
 
             var subject = await _subjectRepository.GetByIdAsync(id.Value);
             if (subject == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("SubjectNotFound");
             }
 
             return View(subject);
@@ -142,6 +143,9 @@ namespace School.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        
+        public IActionResult SubjectNotFound()
+        {
+            return View();
+        }
     }
 }
