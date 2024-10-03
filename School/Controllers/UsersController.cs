@@ -79,6 +79,7 @@ namespace School.Controllers
                         return RedirectToAction("Index", "Home");
                     }
                     ViewBag.UserMessage = "User updated!";
+                    //_flashMessage.Info("User updated!");
                     return RedirectToAction("Index");
                 }
                 else

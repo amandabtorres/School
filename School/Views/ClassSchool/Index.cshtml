@@ -50,19 +50,22 @@
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning"><i class="far fa-edit"></i></a>
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="fa-solid fa-list"></i></a>
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
-                    <a asp-action="AddSubject" asp-route-id="@item.Id" class="btn btn-success"><i class="fa-solid fa-folder-plus"></i></a>
-                    <a asp-action="AddStudent" asp-route-id="@item.Id" class="btn btn-success"><i class="fa-solid fa-user-plus"></i></a>
+                    <a asp-action="SubjectsInClass" asp-route-id="@item.Id" class="btn btn-success"><i class="fa-solid fa-folder-plus"></i></a>
+                    <a asp-action="StudentsInClass" asp-route-id="@item.Id" class="btn btn-success"><i class="fa-solid fa-user-plus"></i></a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
 
+
+
+
 @section Scripts {
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
     <script type="text/javascript">
         $(document).ready(function () {
-            $('#myTable').DataTable();
-        });
+            $('#myTable').DataTable();                   
+            });
     </script>
 }

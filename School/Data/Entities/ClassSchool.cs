@@ -19,7 +19,7 @@ namespace School.Data.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy/MM/dd}", ApplyFormatInEditMode = false)]
         public DateTime EndDate { get; set; }
 
-        public IEnumerable<SubjectsClassDetail> Subjects { get; set; }
+        public List<SubjectsClassDetail> Subjects { get; set; } = new List<SubjectsClassDetail>();
 
 
     }

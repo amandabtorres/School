@@ -5,6 +5,7 @@ using School.Data;
 using School.Data.Entities;
 using School.Helpers;
 using School.Models;
+using Vereyon.Web;
 
 namespace School.Controllers
 {
@@ -12,10 +13,20 @@ namespace School.Controllers
     public class ClassSchoolController : Controller
     {
         private readonly IClassSchoolRepository _classSchoolRepository;
+        private readonly ISubjectRepository _subjectRepository;
+        private readonly IUserHelper _userHelper;
+        private readonly IFlashMessage _flashMessage;
 
-        public ClassSchoolController(IClassSchoolRepository classSchoolRepository)
+        public ClassSchoolController(
+            IClassSchoolRepository classSchoolRepository,
+            ISubjectRepository subjectRepository,
+            IUserHelper userHelper,
+            IFlashMessage flashMessage)
         {
             _classSchoolRepository = classSchoolRepository;
+            _subjectRepository = subjectRepository;
+            _userHelper = userHelper;
+            _flashMessage = flashMessage;
         }
 
         public IActionResult Index()
@@ -42,6 +53,7 @@ namespace School.Controllers
                     Description = model.Description,
                     StartDate = model.StartDate,
                     EndDate = model.EndDate,
+                    
                 };
 
                 await _classSchoolRepository.CreateAsync(classSchool);
@@ -126,11 +138,81 @@ namespace School.Controllers
             var classSchool = await _classSchoolRepository.GetByIdAsync(id);
             await _classSchoolRepository.DeleteAsync(classSchool);
             return RedirectToAction(nameof(Index));
+        }        
+
+        public async Task<IActionResult> SubjectsInClass(int? id)
+        {
+            if (id == null)
+            {
+                return new NotFoundViewResult("ClassNotFound");
+            }
+            var listSubjects = await _classSchoolRepository.GetSubjectsInClassAsync(id.Value);
+
+            var model = new SubjectsClassDetailViewModel
+            {
+                ClassSchoolId = id.Value,
+                SubjectsInClass = listSubjects
+            };
+            return View(model);
         }
 
+        //GET
+        public async Task<IActionResult> AddSubject(int? id)
+        {
+            if (id == null)
+            {
+                return new NotFoundViewResult("ClassNotFound");
+            }
 
+            var model = new AddSubjectViewModel
+            {
+                ClassSchoolId = id.Value,
+                Subjects = await _classSchoolRepository.GetComboSubjectsNotInClassAsync(id.Value),
+                Teachers = await _classSchoolRepository.GetComboTeachersAsync(),
+            };
+            
+            return View(model);
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> AddSubject(AddSubjectViewModel model)
+        {            
+            if (ModelState.IsValid)
+            {
+                var classSchool = await _classSchoolRepository.GetByIdAsync(model.ClassSchoolId);
+                var subject = await _subjectRepository.GetByIdAsync(model.SubjectId);
+                var teacher = await _userHelper.GetUserByIdAsync(model.TeacherId);
+                if(classSchool != null)
+                {
+                    var subjectClassDetail = new SubjectsClassDetail
+                    {
+                        ClassSchoolId = classSchool.Id,
+                        SubjectId = subject.Id,
+                        Subject = subject,
+                        TeacherId = teacher.Id,
+                        Teacher = teacher,
+                    };
+                    classSchool.Subjects.Add(subjectClassDetail);
+                    await _classSchoolRepository.UpdateAsync(classSchool);                                
+                    return this.RedirectToAction($"SubjectsInClass", new { id = classSchool.Id });
+                }
+                _flashMessage.Danger("Class not found!");
+            }
+            return View(model);
+        }
 
+        public async Task<IActionResult> RemoveSubjectClass(int? id)
+        {            
+            if (id == null)
+            {
+                return NotFound();
+            }    
+            
+            var classId = await _classSchoolRepository.DeleteSubjectClassDetailAsync(id.Value);
+            return RedirectToAction($"SubjectsInClass", new { id = classId });
+        }
+
+        
 
         public IActionResult ClassNotFound()
         {

@@ -1,0 +1,98 @@
+﻿@model School.Models.SubjectsClassDetailViewModel
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
+
+<h2>Subjects in Class</h2>
+<br />
+<p>
+    <a asp-action="AddSubject" asp-route-id="@Model.ClassSchoolId" class="btn btn-primary">Add subject</a>
+    <a asp-action="Index" class="btn btn-success">Back to Class </a>
+</p>
+<table class="display" id="myTable" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                Subject
+            </th>
+            <th>
+               Description
+            </th>
+            <th>
+               Workload
+            </th>
+            <th>
+                Teacher
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.SubjectsInClass)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Workload)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Teacher.FullName)
+                </td>
+
+                <td id="@item.Id">
+                    <a asp-action="RemoveSubjectClass" asp-route-id="@item.Id" class="btn btn-danger" id="btnDelete"><i class="fa-solid fa-trash"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="deleteDialog" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+                <button type="button" class="close" data-dimiss="modal"><i class="fa fa-window-close"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to remove the subject from class?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnYesDelete">Yes</button>
+                <button type="button" class="btn btn-success" id="btnNoDelete">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+
+        var id = 0;
+
+        $("a[id*=btnDelete]").click(function () {
+            id = $(this).parent()[0].id;
+            $("#deleteDialog").modal("show");
+            return false;
+        });
+
+        $("#btnNoDelete").click(function () {
+            $("#deleteDialog").modal("hide");
+            return false;
+        });
+       
+        $("#btnYesDelete").click(function () {
+            console.log("id="+id);
+            window.location.href = "/ClassSchool/RemoveSubjectClass/" + id;
+        });
+    </script>
+}
