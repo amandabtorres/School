@@ -187,13 +187,13 @@ namespace School.Controllers
                     var subjectClassDetail = new SubjectsClassDetail
                     {
                         ClassSchoolId = classSchool.Id,
-                        SubjectId = subject.Id,
-                        Subject = subject,
+                        SubjectId = subject.Id,                        
                         TeacherId = teacher.Id,
-                        Teacher = teacher,
-                    };
-                    classSchool.Subjects.Add(subjectClassDetail);
-                    await _classSchoolRepository.UpdateAsync(classSchool);                                
+                        
+                    };    
+                    //classSchool.Subjects.Add(subjectClassDetail);                    
+                    Response result = await _classSchoolRepository.AddSubjectClassDetailInClass(subjectClassDetail, classSchool);
+                    _flashMessage.Info(result.Message);
                     return this.RedirectToAction($"SubjectsInClass", new { id = classSchool.Id });
                 }
                 _flashMessage.Danger("Class not found!");
@@ -201,18 +201,82 @@ namespace School.Controllers
             return View(model);
         }
 
+        //Ao add disciplinas preciso tbm add em todos os alunos da turma!
+
         public async Task<IActionResult> RemoveSubjectClass(int? id)
         {            
             if (id == null)
             {
                 return NotFound();
-            }    
-            
-            var classId = await _classSchoolRepository.DeleteSubjectClassDetailAsync(id.Value);
-            return RedirectToAction($"SubjectsInClass", new { id = classId });
+            }
+            var subjectclass = _classSchoolRepository.GetSubjectClassDetail(id.Value);
+            if (subjectclass == null)
+            {
+                return NotFound();
+            }               
+            var result = await _classSchoolRepository.RemoveSubjectClassDetailAsync(subjectclass);
+            _flashMessage.Info(result.Message);
+            return RedirectToAction($"SubjectsInClass", new { id = subjectclass.ClassSchoolId });
         }
 
+        public async Task<IActionResult> StudentsInClass(int? id)
+        {
+            if (id == null)
+            {
+                return new NotFoundViewResult("ClassNotFound");
+            }
+            var studentsAvailable = await _classSchoolRepository.GetStudentsNotEnrolledInClassAsync(id.Value);
+            var studentsInClass = await _classSchoolRepository.GetStudentsInClassAsync(id.Value);
+
+            var model = new StudentsClassDetailViewModel
+            {
+                ClassSchoolId = id.Value,
+                StudentsAvailable = studentsAvailable,
+                StudentsInClass = studentsInClass
+
+            };
+            return View(model);
+        }
+
+        public async Task<IActionResult> AddStudentClass(string? itemId, int? classId)
+        {
+            if(itemId == null)
+            {
+                return NotFound();
+            }
+            var student = await _userHelper.GetUserByIdAsync(itemId);
+            if(classId == null)
+            {
+                return ClassNotFound();
+            }
+            var classSchool = await _classSchoolRepository.GetByIdAsync(classId.Value);
+            Response result = await _classSchoolRepository.AddStudentInClass(student, classSchool);            
+            _flashMessage.Info(result.Message);            
+
+            return RedirectToAction($"StudentsInClass", new { id = classSchool.Id });
+        }
+
+        public async Task<IActionResult> RemoveStudentClass(string? itemId, int? classId)
+        {
+            if (itemId == null)
+            {
+                return NotFound();
+            }
+            var student = await _userHelper.GetUserByIdAsync(itemId);
+            if (classId == null)
+            {
+                return ClassNotFound();
+            }
+            var classSchool = await _classSchoolRepository.GetByIdAsync(classId.Value);
+            
+            Response result = await _classSchoolRepository.RemoveStudentInClass(student, classSchool);
+            _flashMessage.Warning(result.Message);
+
+            return RedirectToAction($"StudentsInClass", new { id = classSchool.Id });
+        }       
+
         
+
 
         public IActionResult ClassNotFound()
         {

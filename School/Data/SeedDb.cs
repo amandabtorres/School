@@ -52,10 +52,15 @@ namespace School.Data
             }
 
 
-            var result1 = await AddTeachers("mariajoaquina@yopmail.com", "Maria", "Joaquina");
-            var result2 = await AddTeachers("josefernandes@yopmail.com", "Jose", "Fernandes");
-            var result3 = await AddTeachers("paulofreire@yopmail.com", "Paulo", "Freire");
-
+            var result1 = await AddTeachersAsync("mariajoaquina@yopmail.com", "Maria", "Joaquina");
+            var result2 = await AddTeachersAsync("josefernandes@yopmail.com", "Jose", "Fernandes");
+            var result3 = await AddTeachersAsync("paulofreire@yopmail.com", "Paulo", "Freire");
+            var result4 = await AddTeachersAsync("minerva@yopmail.com", "Minerva", "McGonagall");
+            var result5 = await AddStudentsAsync("anakinsky@yopmail.com", "Anakin", "Skywalker");            
+            var result6 = await AddStudentsAsync("brucewayne@yopmail.com", "Bruce", "Wayne");
+            var result7 = await AddStudentsAsync("dianaprince@yopmail.com", "Diana", "Prince");
+            var result8 = await AddStudentsAsync("leiaprincess@yopmail.com", "Leia", "Organa");
+            var result9 = await AddStudentsAsync("peterparker@yopmail.com", "Peter", "Parker");
 
 
             if (!_context.Subjects.Any())
@@ -79,7 +84,7 @@ namespace School.Data
             });
         }
 
-        private async Task<bool> AddTeachers(string userName, string firstName, string lastName)
+        private async Task<bool> AddTeachersAsync(string userName, string firstName, string lastName)
         {
             var user = await _userHelper.GetUserByEmailAsync(userName);
             if (user == null)
@@ -103,6 +108,37 @@ namespace School.Data
                 }
 
                 await _userHelper.AddUserToRoleAsync(user, "Teacher");
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                await _userHelper.ConfirmEmailAsync(user, token);
+                return true;
+            }
+            return false;
+        }
+
+        private async Task<bool> AddStudentsAsync(string userName, string firstName, string lastName)
+        {
+            var user = await _userHelper.GetUserByEmailAsync(userName);
+            if (user == null)
+            {
+                user = new User
+                {
+                    FirstName = firstName,
+                    LastName = lastName,
+                    DateBirth = new DateTime(1990, 03, 10),
+                    Email = userName,
+                    UserName = userName,
+                    PhoneNumber = "123456789",
+                    Address = "Rua Jau 33",
+                    PostalCode = "2700-700",
+                    Nif = "123321213"
+                };
+                var result = await _userHelper.AddUserAsync(user, "123456");
+                if (result != IdentityResult.Success)
+                {
+                    throw new InvalidOperationException("Could not create the user in seeder");
+                }
+
+                await _userHelper.AddUserToRoleAsync(user, "Student");
                 var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
                 await _userHelper.ConfirmEmailAsync(user, token);
                 return true;
