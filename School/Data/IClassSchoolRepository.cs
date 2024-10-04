@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using School.Data.Entities;
+using School.Helpers;
 
 namespace School.Data
 {
@@ -12,9 +13,17 @@ namespace School.Data
         Task<IEnumerable<SelectListItem>> GetComboTeachersAsync();
 
         SubjectsClassDetail GetSubjectClassDetail(int id);
-          
-        Task<int> DeleteSubjectClassDetailAsync(int idSubjectClass);
 
-        
+        Task<Response> AddSubjectClassDetailInClass(SubjectsClassDetail subjectClassDetail, ClassSchool classSchool);
+
+        Task<Response> RemoveSubjectClassDetailAsync(SubjectsClassDetail scd);
+
+        Task<IEnumerable<User>> GetStudentsInClassAsync(int idClass);
+
+        Task<IEnumerable<User>> GetStudentsNotEnrolledInClassAsync(int idClass);
+
+        Task<Response> AddStudentInClass(User user, ClassSchool classSchool);
+        Task<Response> RemoveStudentInClass(User user, ClassSchool classSchool);
+
     }
 }

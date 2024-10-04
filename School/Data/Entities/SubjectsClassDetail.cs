@@ -15,6 +15,7 @@ namespace School.Data.Entities
         public User Teacher { get; set; }
 
         public int ClassSchoolId { get; set; }
+        public ClassSchool ClassSchool { get; set; }
 
     }
 }

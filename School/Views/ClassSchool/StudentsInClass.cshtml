@@ -1,0 +1,138 @@
+﻿@model School.Models.StudentsClassDetailViewModel
+
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
+
+<p>
+    <a asp-action="Index" class="btn btn-success">Back to Class </a>
+</p>
+<flash dismissable="true" />
+<br />
+<h2>List of students in Class</h2>
+<table class="display" id="myTableOne" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                Full Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Date Birth
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.StudentsInClass)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateBirth)
+                </td>
+
+                <td id="@item.Id">
+                    <a asp-action="RemoveStudentClass" data-itemid="@item.Id" data-classid="@Model.ClassSchoolId" class="btn btn-danger" id="btnDelete"><i class="fa-solid fa-circle-xmark"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<hr />
+<br />
+<br />
+<h2>List of student in School</h2>
+<h5>Add students to class:</h5>
+<br />
+<table class="display" id="myTableTwo" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+                Full Name
+            </th>
+            <th>
+                Email
+            </th>
+            <th>
+                Date Birth
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.StudentsAvailable)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Email)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DateBirth)
+                </td>
+
+                <td id="@item.Id">
+                    <a asp-action="AddStudentClass" asp-route-itemId="@item.Id" asp-route-classId="@Model.ClassSchoolId" class="btn btn-success"><i class="fa-solid fa-square-plus"></i></a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="deleteDialog" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete</h4>
+                <button type="button" class="close" data-dimiss="modal"><i class="fa fa-window-close"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to remove the student from class?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnYesDelete">Yes</button>
+                <button type="button" class="btn btn-success" id="btnNoDelete">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#myTableOne').DataTable();
+            $('#myTableTwo').DataTable();
+        });
+
+        var id = 0;
+
+        $("a[id*=btnDelete]").click(function () {            
+            $("#deleteDialog").modal("show");
+            return false;
+        });
+
+        $("#btnNoDelete").click(function () {
+            $("#deleteDialog").modal("hide");
+            return false;
+        });
+
+        $("#btnYesDelete").click(function () {
+            var itemId = $("#btnDelete").data("itemid");
+            var classId = $("#btnDelete").data("classid");
+
+            window.location.href = '/ClassSchool/RemoveStudentClass?itemId=' + itemId + '&classId=' + classId;
+        });
+    </script>
+}
+
