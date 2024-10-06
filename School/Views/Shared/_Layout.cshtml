@@ -30,9 +30,9 @@
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">Users</a> </li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Subjects" asp-action="Index">Subjects</a> </li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="ClassSchool" asp-action="Index">Classes</a> </li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">Manage Users</a> </li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Subjects" asp-action="Index">Manage Subjects</a> </li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="ClassSchool" asp-action="Index">Manage Classes</a> </li>
                                 </ul>
                             </li>
                         }
@@ -53,9 +53,15 @@
 
                     </ul>              
 
-                    <ul class="nav navbar-nav navbar-right">   
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Search" asp-action=""><i class="fa-solid fa-magnifying-glass"></i> Search</a>
+                    <ul class="nav navbar-nav navbar-right">                           
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-magnifying-glass"></i> Search</a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Students">By Student</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Teachers">By Teachers</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Employees">By Employees</a></li>
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Classes">By Class</a></li>
+                            </ul>
                         </li>
                         @if (this.User.Identity.IsAuthenticated)
                         {
@@ -91,7 +97,7 @@
         <div class="container">
             &copy; 2024  |  Site School  |
             <a href="https://www.facebook.com/"><i class="fa-brands fa-facebook"></i></a>   | 
-            <a href=https://www.instagram.com/"><i class="fa-brands fa-instagram"></i> </a>
+            <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i> </a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

@@ -9,8 +9,7 @@ namespace School.Data
         Task<IEnumerable<SubjectsClassDetail>> GetSubjectsInClassAsync(int idClass);
 
         Task<IEnumerable<SelectListItem>> GetComboSubjectsNotInClassAsync(int idClass);
-
-        Task<IEnumerable<SelectListItem>> GetComboTeachersAsync(); //TODO mover para repository user
+               
         SubjectsClassDetail GetSubjectClassDetail(int id);
 
         Task<Response> AddSubjectClassDetailInClass(SubjectsClassDetail subjectClassDetail, ClassSchool classSchool);

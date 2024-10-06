@@ -14,17 +14,20 @@ namespace School.Controllers
     {
         private readonly IClassSchoolRepository _classSchoolRepository;
         private readonly ISubjectRepository _subjectRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IUserHelper _userHelper;
         private readonly IFlashMessage _flashMessage;
 
         public ClassSchoolController(
             IClassSchoolRepository classSchoolRepository,
             ISubjectRepository subjectRepository,
+            IUserRepository userRepository,
             IUserHelper userHelper,
             IFlashMessage flashMessage)
         {
             _classSchoolRepository = classSchoolRepository;
             _subjectRepository = subjectRepository;
+            _userRepository = userRepository;
             _userHelper = userHelper;
             _flashMessage = flashMessage;
         }
@@ -168,7 +171,7 @@ namespace School.Controllers
             {
                 ClassSchoolId = id.Value,
                 Subjects = await _classSchoolRepository.GetComboSubjectsNotInClassAsync(id.Value),
-                Teachers = await _classSchoolRepository.GetComboTeachersAsync(),
+                Teachers = await _userRepository.GetComboTeachersAsync(),
             };
             
             return View(model);

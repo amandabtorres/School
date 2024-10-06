@@ -59,36 +59,7 @@ namespace School.Data
             });
 
             return subjectsNotInClass;
-        }
-
-        public async Task<IEnumerable<SelectListItem>> GetComboTeachersAsync()
-        {
-            var teacher = await _context.Roles.FirstOrDefaultAsync(t => t.Name == "Teacher");
-            if(teacher== null)
-            {
-                return null; ;
-            }
-            var listId = await _context.UserRoles
-                .Where(u => u.RoleId == teacher.Id)
-                .Select(u => u.UserId)
-                .ToListAsync();
-
-            var listTeacher = await _context.Users
-                .Where(u => listId.Contains(u.Id)).Select(s => new SelectListItem
-                {
-                    Value = s.Id,
-                    Text = s.FullName
-                })
-            .ToListAsync();
-
-            listTeacher.Insert(0, new SelectListItem
-            {
-                Text = "(Select a teacher...)",
-                Value = ""
-            });
-
-            return listTeacher;
-        }
+        }       
 
         public SubjectsClassDetail GetSubjectClassDetail(int id)
         {
