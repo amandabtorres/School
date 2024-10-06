@@ -17,5 +17,6 @@ namespace School.Data.Entities
         public int ClassSchoolId { get; set; }
         public ClassSchool ClassSchool { get; set; }
 
+        //TODO colocar Status da turma... se ja acabou o curso... ou esta acontecendo...
     }
 }

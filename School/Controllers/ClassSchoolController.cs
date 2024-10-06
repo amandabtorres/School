@@ -190,8 +190,7 @@ namespace School.Controllers
                         SubjectId = subject.Id,                        
                         TeacherId = teacher.Id,
                         
-                    };    
-                    //classSchool.Subjects.Add(subjectClassDetail);                    
+                    };                                    
                     Response result = await _classSchoolRepository.AddSubjectClassDetailInClass(subjectClassDetail, classSchool);
                     _flashMessage.Info(result.Message);
                     return this.RedirectToAction($"SubjectsInClass", new { id = classSchool.Id });
@@ -200,8 +199,6 @@ namespace School.Controllers
             }
             return View(model);
         }
-
-        //Ao add disciplinas preciso tbm add em todos os alunos da turma!
 
         public async Task<IActionResult> RemoveSubjectClass(int? id)
         {            

@@ -40,6 +40,7 @@ namespace School
             builder.Services.AddTransient<SeedDb>();
             builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
             builder.Services.AddScoped<IClassSchoolRepository, ClassSchoolRepository>();
+            builder.Services.AddScoped<IStudentsClassDetailRepository, StudentsClassDetailRepository>();
             
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<IMailHelper, MailHelper>();

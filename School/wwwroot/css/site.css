@@ -21,10 +21,15 @@ body {
   margin-bottom: 60px;
 }
 
+.small-input {
+    width: 80px; /* Ajuste o valor de acordo com a sua preferência */   
+    
+}
 
-
-
-
+.align-input-grade {
+    display: flex;
+    justify-content: flex-end;
+}
 
 
 
