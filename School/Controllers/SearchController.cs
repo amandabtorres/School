@@ -99,6 +99,33 @@ namespace School.Controllers
             return View(employee);
         }
 
-        
+        public async Task<IActionResult> DetailsStudentByUserName(string userName)
+        {
+            var user = await _userHelper.GetUserByEmailAsync(userName);
+            return this.RedirectToAction($"DetailsStudent", new { id = user.Id });
+
+        }
+
+        public async Task<IActionResult> DetailSubjectInClass(int id, string idTeacher)
+        {
+            var user = await _userHelper.GetUserByIdAsync(idTeacher);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            var scd = _classSchoolRepository.GetSubjectClassDetail(id);
+            if (scd == null)
+            {
+                return NotFound();
+            }
+            var list = await _studentsClassDetailRepository.GetStudentsClassDetailsBySubjectClassDetailAsync(scd);
+            var model = new DetailsSubjectTeacherViewModel
+            {
+                User = user,
+                StudentsInSubject = list,
+            };
+            return View(model);
+        }
+
     }
 }

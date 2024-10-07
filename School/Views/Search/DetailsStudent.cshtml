@@ -59,7 +59,7 @@
 <div>
     @foreach (var item in Model.ClassesOfStudent)
     {
-        <button onclick="testeAjax(@item.Id)" class="btn btn-info" asp-route-id="@item.Id">@item.Name</button>
+        <button onclick="testeAjax(@item.Id)" class="btn btn-info" asp-route-id="@item.Id">@item.Name - @item.Description <i class="fa-solid fa-calendar-days"></i> @item.StartDate.ToString("dd/MM/yyyy") - @item.EndDate.ToString("dd/MM/yyyy") </button>
     }   
 </div>
 

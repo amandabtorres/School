@@ -51,16 +51,18 @@
                         </li>
                         
 
-                    </ul>              
-
-                    <ul class="nav navbar-nav navbar-right">                           
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-magnifying-glass"></i> Search</a>
                             <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Students">By Student</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Teachers">By Teachers</a></li>
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Employees">By Employees</a></li>
                                 <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Classes">By Class</a></li>
+                            @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee") || this.User.IsInRole("Teacher")))
+                                {
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Employees">By Employees</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Students">By Student</a></li> 
+                                }                              
+                                <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Teachers">By Teachers</a></li>                               
                             </ul>
                         </li>
                         @if (this.User.Identity.IsAuthenticated)
@@ -69,7 +71,11 @@
                                 <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-user"></i> @this.User.Identity.Name</a>
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                     <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="ChangeUser">Edit user</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="ChangePassword">Change password</a> </li>                                    
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="ChangePassword">Change password</a> </li>
+                                    @if (this.User.IsInRole("Student"))
+                                    {
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="DetailsStudentByUserName" asp-route-userName="@this.User.Identity.Name">View profile</a> </li>
+                                    }                                   
                                 </ul>
                             </li>                           
                             <li class="nav-item">

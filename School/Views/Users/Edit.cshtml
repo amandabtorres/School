@@ -7,7 +7,7 @@
 <h2>Edit User</h2>
 
 <hr />
-<<div class="row">
+<div class="row">
     <div class="col-md-4 offset-md-4">
         <form method="post" asp-action="Edit">
             <div asp-validation-summary="ModelOnly"></div>       
@@ -52,7 +52,8 @@
                 <label asp-for="Nif">Nif</label>
                 <input asp-for="Nif" class="form-control" />
                 <span asp-validation-for="Nif" class="text-warning"></span>
-            </div>           
+            </div>  
+            <br/>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
                 @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee")))
