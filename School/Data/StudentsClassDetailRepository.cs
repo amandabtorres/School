@@ -15,6 +15,26 @@ namespace School.Data
             _userHelper = userHelper;
         }
 
+        public async Task<IEnumerable<ClassSchool>> GetClassesSchoolByStudent(User user)
+        {
+            return await _context.StudentsClassDetails
+                        .Where(scd => scd.Student.Id == user.Id)
+                        .Select(scd => scd.SubjectsClassDetail.ClassSchool)
+                        .Distinct()
+                        .ToListAsync();                        
+        }
+
+        public async Task<IEnumerable<StudentsClassDetail>> GetStudentClassDetailByClassStudentAsync(User user, int classId )
+        {
+            return await _context.StudentsClassDetails
+                .Include(s=> s.SubjectsClassDetail)
+                .ThenInclude(t=> t.Teacher)
+                .Include(s=> s.SubjectsClassDetail)
+                .ThenInclude(s=> s.Subject)               
+                .Where(u=> u.StudentId == user.Id && u.SubjectsClassDetail.ClassSchoolId == classId)
+                .ToListAsync();               
+        }
+
         public async Task<IEnumerable<StudentsClassDetail>> GetStudentsClassDetailsBySubjectClassDetailAsync(SubjectsClassDetail scd)
         {                      
             return await _context.StudentsClassDetails                

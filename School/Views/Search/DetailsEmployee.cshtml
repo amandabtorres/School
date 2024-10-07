@@ -1,0 +1,61 @@
+﻿@model School.Data.Entities.User
+@{
+    ViewData["Title"] = "Details Employee";
+}
+
+<h1>Details Employee</h1>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.FullName)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.FullName)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.DateBirth)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.DateBirth)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Nif)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Nif)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.Address)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.Address)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.PostalCode)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.PostalCode)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.PhoneNumber)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.PhoneNumber)
+            </dd>
+        </dl>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

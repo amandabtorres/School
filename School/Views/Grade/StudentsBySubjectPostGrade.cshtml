@@ -38,7 +38,7 @@
                     @Html.DisplayFor(modelItem => item.Grade)
                 </td>
                 <td class="align-input-grade">
-                    <input type="number" id="grade-input-@item.Id" class="form-control decimal-input small-input" step="0,01" />
+                    <input type="number" id="grade-input-@item.Id" class="form-control decimal-input small-input" step="0,01" maxlength="4"/>
                 </td>                
                 <td>                    
                     <button type="button" onclick="updateGrade(@item.Id)" class="btn btn-success">

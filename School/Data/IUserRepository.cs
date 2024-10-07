@@ -11,5 +11,7 @@ namespace School.Data
         Task<IEnumerable<SelectListItem>> GetComboTeachersAsync();
 
         Task<IEnumerable<User>> GetUserByRoleInSchool(string roleName);
+
+
     }
 }

@@ -1,0 +1,119 @@
+﻿@model School.Models.DetailsTeacherViewModel
+@{
+    ViewData["Title"] = "Details Teacher";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
+
+<h1>Details Teacher</h1>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.User.FullName)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.FullName)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.User.DateBirth)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.DateBirth)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.User.Email)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.Email)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.User.Nif)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.Nif)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.User.Address)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.Address)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.User.PostalCode)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.PostalCode)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.User.PhoneNumber)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.User.PhoneNumber)
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<h2>List of classes</h2>
+<br/>
+<table class="display" id="myTable" style="width:100%">
+    <thead>
+        <tr>
+            <th>
+               Class
+            </th>
+            <th>
+                Start Date Class
+            </th>
+            <th>
+                End Date Class
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Subject
+            </th>
+            <th>
+                Workload
+            </th>           
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Subjects)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassSchool.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassSchool.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassSchool.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassSchool.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Workload)
+                </td>      
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+    </script>
+}

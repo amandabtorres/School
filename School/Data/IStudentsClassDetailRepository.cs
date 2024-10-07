@@ -10,5 +10,9 @@ namespace School.Data
         Task<IEnumerable<StudentsClassDetail>> GetStudentsClassDetailsBySubjectClassDetailAsync(SubjectsClassDetail scd);
 
         Task<Response> SaveGradeAsync(int id, decimal grade);
+
+        Task<IEnumerable<StudentsClassDetail>> GetStudentClassDetailByClassStudentAsync(User user, int classId);
+
+        Task<IEnumerable<ClassSchool>> GetClassesSchoolByStudent(User user);
     }
 }
