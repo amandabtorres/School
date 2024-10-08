@@ -10,5 +10,11 @@
       "library": "bootstrap-datepicker@1.10.0",
       "destination": "wwwroot/lib/bootstrap-datepicker/"
     }
-  ]
+  ,
+{
+  "provider": "cdnjs",
+  "library": "bootstrap@4.5.3",
+  "destination": "wwwroot/lib/bootstrap/"
+}
+]
 }

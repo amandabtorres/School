@@ -126,6 +126,22 @@ namespace School.Controllers
             };
             return View(model);
         }
-
+        public async Task<IActionResult> DetailsClass(int id)
+        {
+            var classSchool = await _classSchoolRepository.GetByIdAsync(id);
+            if (classSchool == null)
+            {
+                return NotFound();
+            }
+            var listStudents = await _classSchoolRepository.GetStudentsInClassAsync(classSchool.Id);
+            var listSubjects = await _classSchoolRepository.GetSubjectsInClassAsync(classSchool.Id);
+            var model = new DetailsClassViewModel
+            {
+                ClassSchool = classSchool,
+                StudentsInClass = listStudents,
+                SubjectsInClass = listSubjects
+            };
+            return View(model);
+        }
     }
 }

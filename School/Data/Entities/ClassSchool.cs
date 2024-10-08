@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace School.Data.Entities
 {
@@ -21,7 +22,8 @@ namespace School.Data.Entities
 
         public List<SubjectsClassDetail> Subjects { get; set; } = new List<SubjectsClassDetail>();
 
-
+        [Display(Name = "Status")]
+        public string Status => (StartDate <= DateTime.Now && EndDate >= DateTime.Now) ? "Ongoing" : (StartDate > DateTime.Now) ? "Will Start" : "Finished";
     }
 
 }

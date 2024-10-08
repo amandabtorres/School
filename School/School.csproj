@@ -7,6 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\assets\fonts\communication.png" />
+    <Content Remove="wwwroot\assets\fonts\hand.png" />
+    <Content Remove="wwwroot\assets\images\welcome-hero\banner.jpg" />
+    <Content Remove="wwwroot\assets\logo\logo_mini_b.png" />
+    <Content Remove="wwwroot\images\girl_school.jpg" />
+    <Content Remove="wwwroot\images\girl_school.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\images\girl_school.jpg" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MailKit" Version="4.7.1.1" />
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.8" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
@@ -17,6 +30,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Utils" Version="8.0.5" />
     <PackageReference Include="Vereyon.Web.FlashMessage" Version="3.0.0" />
   </ItemGroup>
 

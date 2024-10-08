@@ -1,4 +1,6 @@
-﻿namespace School.Data.Entities
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace School.Data.Entities
 {
     public class StudentsClassDetail : IEntity
     {
@@ -11,5 +13,8 @@
         public SubjectsClassDetail SubjectsClassDetail { get; set; }
 
         public decimal? Grade { get; set; }
+
+        [Display(Name = "Status")]
+        public string Status => Grade == null ? "Ongoing" : Grade >= 10 ? "Approved" : "Failed";
     }
 }

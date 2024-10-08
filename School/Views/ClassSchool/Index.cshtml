@@ -6,12 +6,13 @@
 }
 
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
-
 <h2>Classes</h2>
+<br />
 <flash dismissable="true" />
 <p>
-    <a asp-controller="ClassSchool" asp-action="Create" class="btn btn-primary">Create a new class</a>
+    <a asp-controller="ClassSchool" asp-action="Create"  class="btn btn-warning">Create a new class</a>
 </p>
+<br />
 <table class="display" id="myTable" style="width:100%">
     <thead>
         <tr>
@@ -26,7 +27,10 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.EndDate)
-            </th>            
+            </th>  
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -45,7 +49,10 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.EndDate)
-                </td>               
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Status)
+                </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning"><i class="far fa-edit"></i></a>
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="fa-solid fa-list"></i></a>

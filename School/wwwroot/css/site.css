@@ -192,14 +192,14 @@ a.more-link {
 /*Not Authorized*/
 
 .num-not-authorized {
-    font-size: 200px;
+    font-size: 150px;
     color: red;
     text-align: center;
 }
 
 .not-authorized {
     text-align: center;
-    font-size: 35px;
+    font-size: 50px;
     color: red;
 }
 

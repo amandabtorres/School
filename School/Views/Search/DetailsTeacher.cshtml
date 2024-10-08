@@ -55,7 +55,7 @@
         </dl>
     </div>
 </div>
-
+<br />
 <h2>List of classes</h2>
 <br/>
 <table class="display" id="myTable" style="width:100%">
@@ -63,6 +63,9 @@
         <tr>
             <th>
                Class
+            </th>
+            <th>
+                Status Class
             </th>
             <th>
                 Start Date Class
@@ -88,6 +91,9 @@
             <tr>
                 <td>
                     @Html.DisplayFor(modelItem => item.ClassSchool.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClassSchool.Status)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ClassSchool.StartDate)

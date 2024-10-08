@@ -56,13 +56,14 @@
     </div>
 </div>
 <h3>Classes</h3>
+<br/>
 <div>
     @foreach (var item in Model.ClassesOfStudent)
     {
         <button onclick="testeAjax(@item.Id)" class="btn btn-info" asp-route-id="@item.Id">@item.Name - @item.Description <i class="fa-solid fa-calendar-days"></i> @item.StartDate.ToString("dd/MM/yyyy") - @item.EndDate.ToString("dd/MM/yyyy") </button>
     }   
 </div>
-
+<br />
 <div>
     <table class="display" id="myTable" style="width:40%; display:none">
         <thead>
@@ -75,6 +76,9 @@
                 </th>
                 <th>
                     Grade
+                </th>
+                <th>
+                    Status
                 </th>
             </tr>
         </thead>
@@ -113,6 +117,7 @@
                             + '<td>' + scd.subjectsClassDetail.subject.name + '</td>'
                             +  '<td>' + scd.subjectsClassDetail.teacher.fullName + '</td>'
                             + '<td>' + (scd.grade == null ? '' : scd.grade) + '</td>'
+                            + '<td>' + scd.status + '</td>'
                             + '</tr>' );
                     });
 

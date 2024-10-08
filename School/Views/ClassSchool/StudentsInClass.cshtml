@@ -38,13 +38,15 @@
                     @Html.DisplayFor(modelItem => item.DateBirth)
                 </td>
 
-                <td id="@item.Id">
-                    <a asp-action="RemoveStudentClass" data-itemid="@item.Id" data-classid="@Model.ClassSchoolId" class="btn btn-danger" id="btnDelete"><i class="fa-solid fa-circle-xmark"></i></a>
+                <td>
+                    <button type="button" class="btn btn-danger" onclick="removeItem('@item.Id', '@Model.ClassSchoolId')"><i class="fa-solid fa-circle-xmark"></i></button>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+<input type="hidden" id="itemIdToRemove" />
+<input type="hidden" id="classIdBase" />
 <hr />
 <br />
 <br />
@@ -115,21 +117,22 @@
             $('#myTableTwo').DataTable();
         });
 
-        var id = 0;
-
-        $("a[id*=btnDelete]").click(function () {            
+        function removeItem(itemId, classId){
+            $("#itemIdToRemove").val(itemId);
+            $("#classIdBase").val(classId);
             $("#deleteDialog").modal("show");
-            return false;
-        });
+        }
 
         $("#btnNoDelete").click(function () {
+            $("#itemIdToRemove").empty();
+            $("#classIdBase").empty();
             $("#deleteDialog").modal("hide");
             return false;
-        });
+        });    
 
         $("#btnYesDelete").click(function () {
-            var itemId = $("#btnDelete").data("itemid");
-            var classId = $("#btnDelete").data("classid");
+            var itemId = $("#itemIdToRemove").val();
+            var classId = $("#classIdBase").val();
 
             window.location.href = '/ClassSchool/RemoveStudentClass?itemId=' + itemId + '&classId=' + classId;
         });
