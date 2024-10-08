@@ -2,113 +2,279 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />       
-    <title>@ViewData["Title"] - Site School </title>    
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!--font-family-->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+    <!-- title of site -->
+    <title>@ViewData["Title"] - Site School </title>
+    <!-- For favicon png -->
+    <link rel="shortcut icon" type="image/icon" href="assets/logo/school.png" />
+    <!--font-awesome.min.css-->
+    @* <link rel="stylesheet" href="~/assets/css/font-awesome.min.css"> *@
+    <!--linear icon css-->
+    <link rel="stylesheet" href="~/assets/css/linearicons.css">
+    <!--animate.css-->
+    <link rel="stylesheet" href="~/assets/css/animate.css">
+    <!--flaticon.css-->
+    <link rel="stylesheet" href="~/assets/css/flaticon.css">
+    <!--slick.css-->
+    <link rel="stylesheet" href="~/assets/css/slick.css">
+    <link rel="stylesheet" href="~/assets/css/slick-theme.css">
+    <!--bootstrap.min.css-->
+    <link rel="stylesheet" href="~/assets/css/bootstrap.min.css">
+   @*  <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.css" /> *@
+    <!-- bootsnav -->
+    <link rel="stylesheet" href="~/assets/css/bootsnav.css">
+    <!--style.css-->
+    <link rel="stylesheet" href="~/assets/css/style.css">
+    <!--responsive.css-->
+    <link rel="stylesheet" href="~/assets/css/responsive.css">
+    <!--datepicker-->
     <link rel="stylesheet" href="~/lib/bootstrap-datepicker/css/bootstrap-datepicker.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <!--font-awesome.css-->
     <link rel="stylesheet" href="~/lib/font-awesome/css/all.min.css" />
-    <link rel="stylesheet" href="~/School.styles.css" asp-append-version="true" />
+  
 </head>
 <body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar navbar-dark bg-primary border-bottom box-shadow mb-3">
-            <div class="container-fluid">                   
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index" > School </a>                
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between dropdown">
-                    <ul class="nav navbar-nav">                                              
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="" asp-action="">About us</a>
-                        </li>                        
-                        @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee")))
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">Manage Users</a> </li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Subjects" asp-action="Index">Manage Subjects</a> </li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="ClassSchool" asp-action="Index">Manage Classes</a> </li>
-                                </ul>
-                            </li>
-                        }
-                        @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Teacher")))
-                        {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Grade</a>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Grade" asp-action="Index">Post grades</a> </li>                                    
-                                </ul>
-                            </li>
-                        }
-                        <li class="nav-item">
-                            <a class="nav-link " asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-
-                        </li>
-                        
-
+    <header id="header-top" class="header-top">
+        <ul>
+            <li>
+                <div class="header-top-left">
+                    <ul>
+                        <li class="select-opt">
+                            <select name="language" id="language">
+                                <option value="default">EN</option>                                
+                            </select>
+                        </li>  
                     </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-magnifying-glass"></i> Search</a>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Classes">By Class</a></li>
-                            @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee") || this.User.IsInRole("Teacher")))
-                                {
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Employees">By Employees</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Students">By Student</a></li> 
-                                }                              
-                                <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Teachers">By Teachers</a></li>                               
-                            </ul>
-                        </li>
+                </div>
+            </li>
+            <li class="head-responsive-right pull-right">
+                <div class="header-top-right dropdown">
+                    <ul>
+                        <li class="header-top-contact">
+                            +351 222 777 565
+                        </li>   
                         @if (this.User.Identity.IsAuthenticated)
                         {
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-user"></i> @this.User.Identity.Name</a>
-                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="ChangeUser">Edit user</a></li>
-                                    <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="ChangePassword">Change password</a> </li>
-                                    @if (this.User.IsInRole("Student"))
-                                    {
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="DetailsStudentByUserName" asp-route-userName="@this.User.Identity.Name">View profile</a> </li>
-                                    }                                   
-                                </ul>
-                            </li>                           
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
+                            <li class="header-top-contact">
+                                <a><i class="fa-solid fa-user"></i> @this.User.Identity.Name</a>
+                                
+                            </li>
+                            <li class="header-top-contact">
+                                <a asp-area="" asp-controller="Account" asp-action="Logout"><i class="fa-solid fa-right-from-bracket"></i></a>
                             </li>
                         }
                         else
                         {
-                            <li class="nav-item">
-                                <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">Iniciar sessão <i class="fa-solid fa-right-to-bracket"></i></a>
+                            <li class="header-top-contact">
+                                <a  asp-area="" asp-controller="Account" asp-action="Login">Iniciar sessão <i class="fa-solid fa-right-to-bracket"></i></a>
                             </li>
-                        }                        
+                        }
                     </ul>
                 </div>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+            </li>
+        </ul>
+
+    </header><!--/.header-top-->
+    <!--header-top end -->
+    <!-- top-area Start -->
+    <section class="top-area">
+        <div class="header-area">
+            <!-- Start Navigation -->
+            <nav class="navbar navbar-default bootsnav  navbar-sticky navbar-scrollspy" data-minus-value-desktop="70" data-minus-value-mobile="55" data-speed="1000">
+
+                <div class="container">
+
+                    <!-- Start Header Navigation -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu">
+                            <i class="fa fa-bars"></i>
+                        </button>
+                        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">site<span>School</span></a>
+
+                    </div><!--/.navbar-header-->
+                    <!-- End Header Navigation -->
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse menu-ui-design dropdown" id="navbar-menu">
+                        <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
+                            <li class=" active"><a asp-area="" asp-controller="" asp-action="">Home</a></li>
+                            <li><a asp-area="" asp-controller="" asp-action="">About us</a></li>
+                            @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee")))
+                            {
+                                <li class=" dropdown">
+                                    <a class="dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">Manage Users</a> </li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Subjects" asp-action="Index">Manage Subjects</a> </li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="ClassSchool" asp-action="Index">Manage Classes</a> </li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Teacher")))
+                            {
+                                <li class=" dropdown">
+                                    <a class="dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Grade</a>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Grade" asp-action="Index">Post grades</a> </li>
+                                    </ul>
+                                </li>
+                            }
+                            <li>
+                                <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            </li>                            
+                            @if (this.User.Identity.IsAuthenticated)
+                            {
+                                <li class="dropdown">
+                                    <a class="dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-user"></i> My Profile</a>
+                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="ChangeUser">Edit user</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="ChangePassword">Change password</a> </li>
+                                        @if (this.User.IsInRole("Student"))
+                                        {
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="DetailsStudentByUserName" asp-route-userName="@this.User.Identity.Name">View profile</a> </li>
+                                        }
+                                    </ul>
+                                </li>
+                            }
+                            <li class="dropdown">
+                                <a class="dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-magnifying-glass"></i> Search</a>
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Classes">By Class</a></li>
+                                    @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee") || this.User.IsInRole("Teacher")))
+                                    {
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Employees">By Employees</a></li>
+                                        <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Students">By Student</a></li>
+                                    }
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Search" asp-action="Teachers">By Teachers</a></li>
+                                </ul>
+                            </li>
+                        </ul><!--/.nav -->
+                    </div><!-- /.navbar-collapse -->
+                </div><!--/.container-->
+            </nav><!--/nav-->
+            <!-- End Navigation -->
+        </div><!--/.header-area-->
+        <div class="clearfix"></div>
+    </section><!-- /.top-area-->
+    <!-- top-area End -->
+   
+    
+    <div class="container" >
+        <main role="main" class="render-principal">
             @RenderBody()
         </main>
     </div>
-
-    <footer class="border-top footer text-muted">
+    <!-- statistics strat -->
+    <section id="statistics" class="statistics">
         <div class="container">
-            &copy; 2024  |  Site School  |
-            <a href="https://www.facebook.com/"><i class="fa-brands fa-facebook"></i></a>   | 
-            <a href="https://www.instagram.com/"><i class="fa-brands fa-instagram"></i> </a>
-        </div>
-    </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+            <div class="statistics-counter">
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-ststistics-box">
+                        <div class="statistics-content">
+                            <div class="counter">5 </div> <span>k+</span>
+                        </div><!--/.statistics-content-->
+                        <h3>students</h3>
+                    </div><!--/.single-ststistics-box-->
+                </div><!--/.col-->
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-ststistics-box">
+                        <div class="statistics-content">
+                            <div class="counter">40</div> <span>+</span>
+                        </div><!--/.statistics-content-->
+                        <h3>activities</h3>
+                    </div><!--/.single-ststistics-box-->
+                </div><!--/.col-->
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-ststistics-box">
+                        <div class="statistics-content">
+                            <div class="counter">30</div> <span>+</span>
+                        </div><!--/.statistics-content-->
+                        <h3>teachers</h3>
+                    </div><!--/.single-ststistics-box-->
+                </div><!--/.col-->
+                <div class="col-md-3 col-sm-6">
+                    <div class="single-ststistics-box">
+                        <div class="statistics-content">
+                            <div class="counter">10</div> <span>k+</span>
+                        </div><!--/.statistics-content-->
+                        <h3>happy clients</h3>
+                    </div><!--/.single-ststistics-box-->
+                </div><!--/.col-->
+            </div><!--/.statistics-counter-->
+        </div><!--/.container-->
+
+    </section><!--/.counter-->
+    <!-- statistics end -->
+    
+       
+
+     <!--footer start-->
+    <footer class="footer-layout">
+        <div class="container">
+            <div>
+                <div class="row">                   
+                    <div class="col-sm-3">
+                        <p>
+                            &copy;copyright. designed and developed by <a href="https://www.themesine.com/">themesine</a>
+                        </p><!--/p-->
+                    </div>
+                    <div class="col-sm-9">
+                        <div class="footer-social">                           
+                            <a href="#"><i class="fa-brands fa-facebook"></i></i></a>
+                            <a href="#"><i class="fa-brands fa-x-twitter"></i></i></a>
+                            <a href="#"><i class="fa-brands fa-linkedin"></i></i></a>
+                            <a href="#"><i class="fa-brands fa-google-plus-g"></i></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div><!--/.hm-footer-copyright-->
+        </div><!--/.container-->
+        <div id="scroll-Top">
+            <div class="return-to-top">
+                <i class="fa fa-angle-up " id="scroll-top" data-toggle="tooltip" data-placement="top" title="" data-original-title="Back to Top" aria-hidden="true"></i>
+            </div>
+        </div><!--/.scroll-Top-->
+
+    </footer><!--/.footer-->
+    <!--footer end-->
+
+
+
+    <!-- Include all js compiled plugins (below), or include individual files as needed -->
+
+    <script src="~/assets/js/jquery.js"></script>
+
+    <!--modernizr.min.js-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+
+    <!--bootstrap.min.js-->
+    @* <script src="~/assets/js/bootstrap.min.js"></script> *@
+
+    <!-- bootsnav js -->
+    <script src="~/assets/js/bootsnav.js"></script>
+
+    <!--feather.min.js-->
+    <script src="~/assets/js/feather.min.js"></script>
+
+    <!-- counter js -->
+    <script src="~/assets/js/jquery.counterup.min.js"></script>
+    <script src="~/assets/js/waypoints.min.js"></script>
+
+    <!--slick.min.js-->
+    <script src="~/assets/js/slick.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+
+    <!--Custom JS-->
+    <script src="~/assets/js/custom.js"></script>
+
+    <!--Originais-->
+   @*  <script src="~/lib/jquery/dist/jquery.min.js"></script> *@
+    @* <script src="~/lib/bootstrap/js/bootstrap.js"></script> *@ 
+    <script src="~/assets/js/bootstrap.min.js"></script>
+   @*  <script src="~/js/site.js" asp-append-version="true"></script> *@
     <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

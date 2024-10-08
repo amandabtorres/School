@@ -1,0 +1,145 @@
+﻿@model School.Models.DetailsClassViewModel
+@{
+    ViewData["Title"] = "DetailsClass";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
+
+<h1>Details Class</h1>
+<hr />
+<div class="row">
+    <div class="col-md-8">
+        <dl class="row">
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.ClassSchool.Name)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.ClassSchool.Name)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.ClassSchool.Description)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.ClassSchool.Description)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.ClassSchool.StartDate)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.ClassSchool.StartDate)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.ClassSchool.EndDate)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.ClassSchool.EndDate)
+            </dd>
+            <dt class="col-sm-3">
+                @Html.DisplayNameFor(model => model.ClassSchool.Status)
+            </dt>
+            <dd class="col-sm-9">
+                @Html.DisplayFor(model => model.ClassSchool.Status)
+            </dd>            
+        </dl>
+    </div>
+</div>
+
+<h1>Subjects in Class</h1>
+<hr />
+
+<table class="display" id="oneTable" style="width:40%">
+    <thead>
+        <tr>
+            <th>
+                Subject
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                Workload
+            </th>
+            <th>
+                Teacher
+            </th>           
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.SubjectsInClass)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Subject.Workload)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Teacher.FullName)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@if (this.User.IsInRole("Admin") || this.User.IsInRole("Employee") || this.User.IsInRole("Teacher"))
+{
+    <h1>Students in Class</h1>
+    <hr />
+    <table class="display" id="twoTable" style="width:40%">
+        <thead>
+            <tr>
+                <th>
+                    Full Name
+                </th>
+                <th>
+                    Email
+                </th>
+                <th>
+                    Date Birth
+                </th>
+               
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.StudentsInClass)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateBirth)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@section Scripts{
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $('#oneTable').DataTable({
+            info: false,
+            ordering: false,
+            paging: false,
+            searching: false
+        });
+        $('#twoTable').DataTable({
+            info: false,
+            ordering: false,
+            paging: false,
+            searching: false
+        });
+    });
+    </script>
+}
