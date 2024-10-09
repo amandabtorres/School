@@ -100,7 +100,7 @@
                     <div class="collapse navbar-collapse menu-ui-design dropdown" id="navbar-menu">
                         <ul class="nav navbar-nav navbar-right" data-in="fadeInDown" data-out="fadeOutUp">
                             <li class=" active"><a asp-area="" asp-controller="" asp-action="">Home</a></li>
-                            <li><a asp-area="" asp-controller="" asp-action="">About us</a></li>
+                            <li><a asp-area="" asp-controller="Home" asp-action="About">About us</a></li>
                             @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee")))
                             {
                                 <li class=" dropdown">
@@ -161,7 +161,7 @@
     <!-- top-area End -->
    
     
-    <div class="container" >
+    <div>
         <main role="main" class="render-principal">
             @RenderBody()
         </main>
