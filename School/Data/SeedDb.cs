@@ -1,5 +1,6 @@
 ﻿
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using School.Data.Entities;
 using School.Helpers;
 
@@ -25,16 +26,16 @@ namespace School.Data
             await _userHelper.CheckRoleAsync("Employee");
             await _userHelper.CheckRoleAsync("Teacher");
 
-            var user = await _userHelper.GetUserByEmailAsync("banaszeskiamanda@gmail.com");
+            var user = await _userHelper.GetUserByEmailAsync("adm.projectotorres@gmail.com");
             if (user == null)
             {
                 user = new User
                 {
-                    FirstName = "Amanda",
-                    LastName = "Torres",
+                    FirstName = "Admin",
+                    LastName = "Principal",
                     DateBirth = new DateTime(1993, 01, 05),
-                    Email = "banaszeskiamanda@gmail.com",
-                    UserName = "banaszeskiamanda@gmail.com",
+                    Email = "adm.projectotorres@gmail.com",
+                    UserName = "adm.projectotorres@gmail.com",
                     PhoneNumber = "123456789",
                     Address = "Rua Jau 33",
                     PostalCode = "2700-700",
