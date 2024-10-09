@@ -94,8 +94,8 @@ html,body{height: 100%;}
 
 .render-principal {   
     justify-content: center;
-    align-items: center;
-    padding: 30px;
+    align-items: center;   
+    padding: 40px;    
 }
 
 /*end section render*/
