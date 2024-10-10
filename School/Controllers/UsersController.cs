@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages.Manage;
 using School.Data;
@@ -10,6 +11,7 @@ using Vereyon.Web;
 
 namespace School.Controllers
 {
+    
     public class UsersController : Controller
     {
         private readonly IUserRepository _userRepository;
@@ -25,10 +27,65 @@ namespace School.Controllers
             _userHelper = userHelper;
             _flashMessage = flashMessage;
         }
+        [Authorize(Roles = "Employee, Admin")]
         public IActionResult Index()
         {
             return View(_userRepository.GetAll());
-        }                
+        }
+
+        [Authorize(Roles = "Employee, Admin")]
+        public IActionResult Register()
+        {
+            var model = new RegisterNewUserViewModel
+            {
+                Roles = _userHelper.GetComboRoles()
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterNewUserViewModel model)
+        {
+            model.Roles = _userHelper.GetComboRoles();
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Username);
+                if (user == null)
+                {
+                    var selectedRole = model.Roles.FirstOrDefault(r => r.Value == model.RoleId.ToString());
+                    string roleUser = selectedRole.Text;
+
+                    user = new User
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        DateBirth = model.DateBirth,
+                        Email = model.Username,
+                        UserName = model.Username,
+                        Address = model.Address,
+                        PhoneNumber = model.PhoneNumber,
+                        PostalCode = model.PostalCode,
+                        Nif = model.Nif
+                    };
+
+                    var result = await _userHelper.AddUserAsync(user, model.Password);
+                    if (result != IdentityResult.Success)
+                    {
+                        _flashMessage.Danger("The user couldn't be created.");
+                        return View(model);
+                    }
+                    await _userHelper.AddUserToRoleAsync(user, roleUser);
+
+                    _flashMessage.Warning("The user has been created!\r\nDon't forget to send the confirmation email...");
+
+                    return RedirectToAction("Index", "Users");
+                }
+                _flashMessage.Danger("The user is already being used.");
+                return View(model);
+            }            
+            return View(model);
+        }
+                
 
         [HttpGet]
         public async  Task<IActionResult> Edit(string id)
@@ -89,7 +146,7 @@ namespace School.Controllers
             }   
             return View(model);
         }
-
+        [Authorize(Roles = "Employee, Admin")]
         public async Task<IActionResult> Delete(string? id)
         {
             if (id == null)

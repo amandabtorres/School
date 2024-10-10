@@ -4,6 +4,8 @@ using School.Data.Entities;
 using School.Helpers;
 using School.Models;
 using Vereyon.Web;
+using static Org.BouncyCastle.Crypto.Engines.SM2Engine;
+using static System.Collections.Specialized.BitVector32;
 
 namespace School.Controllers
 {
@@ -47,7 +49,7 @@ namespace School.Controllers
                     return this.RedirectToAction("Index", "Home");
                 }
             }
-            this.ModelState.AddModelError(string.Empty, "Failed to login");
+            _flashMessage.Warning("Failed to login!");            
             return View(model);
         }
 
@@ -56,7 +58,6 @@ namespace School.Controllers
             await _userHelper.LogoutAsync();
             return RedirectToAction("Index", "Home");
         }
-
 
         public IActionResult ChangePassword()
         {
@@ -89,83 +90,37 @@ namespace School.Controllers
             }
             return this.View(model);
         }
-
-        public async Task<IActionResult> ChangeUser()
+        
+        public async Task<IActionResult> SendEmail(string? id)
         {
-            var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-            var userId = user.Id;
-
-            return RedirectToAction("Edit", "Users", new { id = userId });            
-        }
-
-        public IActionResult Register()
-        {
-            var model = new RegisterNewUserViewModel
+            if(id == null)
             {
-                Roles = _userHelper.GetComboRoles()
-            };
-            return View(model);
-        }
+                return NotFound();
+            }
+            var user = await _userHelper.GetUserByIdAsync(id);
 
-        [HttpPost]
-        public async Task<IActionResult> Register(RegisterNewUserViewModel model)
-        {
-            model.Roles = _userHelper.GetComboRoles();
-
-            if (ModelState.IsValid)
+            string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+            string tokenLink = Url.Action("ConfirmEmail", "Account", new
             {
-                var user = await _userHelper.GetUserByEmailAsync(model.Username);
-                if (user == null)
-                {
-                    var selectedRole = model.Roles.FirstOrDefault(r => r.Value == model.RoleId.ToString());
-                    string roleUser = selectedRole.Text;
+                userid = user.Id,
+                token = myToken
+            }, protocol: HttpContext.Request.Scheme);
 
-                    user = new User
-                    {
-                        FirstName = model.FirstName,
-                        LastName = model.LastName,
-                        DateBirth = model.DateBirth,
-                        Email = model.Username,
-                        UserName = model.Username,
-                        Address = model.Address,
-                        PhoneNumber = model.PhoneNumber,
-                        PostalCode = model.PostalCode,
-                        Nif = model.Nif
-                    };
+            Response response = _mailHelper.SendEmail(user.Email, "Email confirmation", $"<h1>Email Confirmation</h1>" +
+                $"To allow the user, " +
+                $"please click in this link: </br></br><a href = \"{tokenLink}\">Confirm Email</a>");
 
-                    var result = await _userHelper.AddUserAsync(user, model.Password);
-                    if (result != IdentityResult.Success)
-                    {
-                        _flashMessage.Danger("The user couldn't be created.");                        
-                        return View(model);
-                    }
-                    await _userHelper.AddUserToRoleAsync(user, roleUser);
-
-                    string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
-                    string tokenLink = Url.Action( "ConfirmEmail", "Account", new
-                    {
-                        userid = user.Id,
-                        token = myToken
-                    }, protocol: HttpContext.Request.Scheme);                   
-
-                    Response response = _mailHelper.SendEmail(model.Username, "Email confirmation", $"<h1>Email Confirmation</h1>" +
-                        $"To allow the user, " +
-                        $"please click in this link: </br></br><a href = \"{tokenLink}\">Confirm Email</a>");
-
-                    if (response.IsSuccess)
-                    {
-                        _flashMessage.Info("The instructions to allow you user has been sent to email");                        
-                        return RedirectToAction("Index", "Users"); 
-                    }
-
-                    return View(model);
-                }
-                _flashMessage.Danger("The user is already being used.");               
-                return View(model);
-            }            
-            return View(model);
+            if (response.IsSuccess)
+            {
+                _flashMessage.Info("The instructions to allow you user has been sent to email");                
+            }
+            else
+            {
+                _flashMessage.Info("Unable to send email: " + response.Message);
+            }
+            return RedirectToAction("Index", "Users");
         }
-
+               
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
@@ -186,7 +141,6 @@ namespace School.Controllers
             }
 
             return View();
-
         }
 
         public IActionResult RecoverPassword()
@@ -249,6 +203,14 @@ namespace School.Controllers
             }
             _flashMessage.Danger("User not found.");            
             return View(model);
+        }
+
+        public async Task<IActionResult> ChangeUser()
+        {
+            var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+            var userId = user.Id;
+
+            return RedirectToAction("Edit", "Users", new { id = userId });
         }
 
         public IActionResult NotAuthorized()

@@ -52,7 +52,7 @@ namespace School.Models
 
         
         [Display(Name = "Role")]       
-        [Required(AllowEmptyStrings =false)]
+        [Required(AllowEmptyStrings = false)]
         public string RoleId { get; set; }
 
         public IEnumerable<SelectListItem>? Roles { get; set; }

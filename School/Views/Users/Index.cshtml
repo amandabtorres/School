@@ -9,7 +9,7 @@
 <br />
 <flash dismissable= "true" />
 <p>
-    <a asp-controller="Account" asp-action="Register"  class="btn btn-warning">Register a new user</a>
+    <a asp-controller="Users" asp-action="Register"  class="btn btn-warning">Register a new user</a>
 </p>
 <br />
 <table class="display" id="myTable" style="width:100%">
@@ -56,6 +56,7 @@
                     <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-warning"><i class="far fa-edit"></i></a>
                     <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info"><i class="fa-solid fa-list"></i></a>
                     <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger"><i class="fa-solid fa-trash"></i></a>
+                    <a asp-controller="Account" asp-action="SendEmail" asp-route-id="@item.Id" class="btn btn-success"><i class="fa-solid fa-envelope-circle-check"></i></a>
                 </td>
             </tr>
         }
