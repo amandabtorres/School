@@ -43,6 +43,9 @@ namespace School.Models
         [MaxLength(10, ErrorMessage = "The field {0} only can contain {1} characters length.")]
         public string Nif { get; set; }
 
-      
+        [Display(Name = "Image")]
+        public string? ImageUrl { get; set; }
+
+        public IFormFile? ImageFile { get; set; }
     }
 }

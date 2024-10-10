@@ -24,10 +24,22 @@ namespace School.Data.Entities
 
         public string Nif { get; set; }
 
+        public string? ImageUrl { get; set; }
 
         [Display(Name = "Full Name")]
         public string FullName => $"{FirstName} {LastName}";
 
+        public string ImageFullPath
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(ImageUrl))
+                {
+                    return null;
+                }
+                return $"https://localhost:7249{ImageUrl.Substring(1)}";
+            }
+        }
 
     }
 }

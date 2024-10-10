@@ -49,10 +49,34 @@ namespace School.Controllers
             model.Roles = _userHelper.GetComboRoles();
             if (ModelState.IsValid)
             {
+                var selectedRole = model.Roles.FirstOrDefault(r => r.Value == model.RoleId.ToString());
+                if (selectedRole.Text == "Student" && model.ImageFile == null)
+                {
+                    _flashMessage.Danger("For students it is necessary to add a photo...");
+                    return View(model);
+                }
+                var path = string.Empty;
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    var guid = Guid.NewGuid().ToString();
+                    var file = $"{guid}.jpg";
+
+                    path = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot\\images\\users",
+                        file);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await model.ImageFile.CopyToAsync(stream);
+                    }
+                    path = $"~/images/users/{file}";
+
+                }
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);
                 if (user == null)
                 {
-                    var selectedRole = model.Roles.FirstOrDefault(r => r.Value == model.RoleId.ToString());
+
                     string roleUser = selectedRole.Text;
 
                     user = new User
@@ -65,7 +89,8 @@ namespace School.Controllers
                         Address = model.Address,
                         PhoneNumber = model.PhoneNumber,
                         PostalCode = model.PostalCode,
-                        Nif = model.Nif
+                        Nif = model.Nif,
+                        ImageUrl = path,
                     };
 
                     var result = await _userHelper.AddUserAsync(user);
@@ -82,10 +107,10 @@ namespace School.Controllers
                 }
                 _flashMessage.Danger("The user is already being used.");
                 return View(model);
-            }            
+            }
             return View(model);
         }
-                
+
 
         [HttpGet]
         public async  Task<IActionResult> Edit(string id)
@@ -107,7 +132,8 @@ namespace School.Controllers
                 model.Address = user.Address;
                 model.PhoneNumber = user.PhoneNumber;
                 model.PostalCode = user.PostalCode;
-                model.Nif = user.Nif;              
+                model.Nif = user.Nif; 
+                model.ImageUrl = user.ImageUrl;
 
                 return View(model);
             }
@@ -119,6 +145,23 @@ namespace School.Controllers
         {            
             if (ModelState.IsValid)
             {
+                var path = model.ImageUrl;
+                if(model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    var guid = Guid.NewGuid().ToString();
+                    var file = $"{guid}.jpg";
+
+                    path = Path.Combine(
+                        Directory.GetCurrentDirectory(),
+                        "wwwroot\\images\\users",
+                        file);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        await model.ImageFile.CopyToAsync(stream);
+                    }
+                    path = $"~/images/users/{file}";
+                }
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);                    
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
@@ -127,6 +170,7 @@ namespace School.Controllers
                 user.PhoneNumber = model.PhoneNumber;
                 user.PostalCode = model.PostalCode;
                 user.Nif = model.Nif;
+                user.ImageUrl = path;
                
                 var response = await _userHelper.UpdateUserAsync(user);
                 if (response.Succeeded)
@@ -171,6 +215,20 @@ namespace School.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> Details (string? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userHelper.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
 
     }
 }
