@@ -68,7 +68,7 @@ namespace School.Controllers
                         Nif = model.Nif
                     };
 
-                    var result = await _userHelper.AddUserAsync(user, model.Password);
+                    var result = await _userHelper.AddUserAsync(user);
                     if (result != IdentityResult.Success)
                     {
                         _flashMessage.Danger("The user couldn't be created.");

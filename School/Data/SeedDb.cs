@@ -41,7 +41,7 @@ namespace School.Data
                     PostalCode = "2700-700",
                     Nif = "123321213"
                 };
-                var result = await _userHelper.AddUserAsync(user, "123456");
+                var result = await _userHelper.AddUserWithPasswordAsync(user, "123456");
                 if (result != IdentityResult.Success)
                 {
                     throw new InvalidOperationException("Could not create the user in seeder");
@@ -102,7 +102,7 @@ namespace School.Data
                     PostalCode = "2700-700",
                     Nif = "123321213"
                 };
-                var result = await _userHelper.AddUserAsync(user, "123456");
+                var result = await _userHelper.AddUserWithPasswordAsync(user, "123456");
                 if (result != IdentityResult.Success)
                 {
                     throw new InvalidOperationException("Could not create the user in seeder");
@@ -133,7 +133,7 @@ namespace School.Data
                     PostalCode = "2700-700",
                     Nif = "123321213"
                 };
-                var result = await _userHelper.AddUserAsync(user, "123456");
+                var result = await _userHelper.AddUserWithPasswordAsync(user, "123456");
                 if (result != IdentityResult.Success)
                 {
                     throw new InvalidOperationException("Could not create the user in seeder");
