@@ -90,10 +90,10 @@ namespace School.Controllers
             }
             return this.View(model);
         }
-        
+
         public async Task<IActionResult> SendEmail(string? id)
         {
-            if(id == null)
+            if (id == null)
             {
                 return NotFound();
             }
@@ -112,7 +112,7 @@ namespace School.Controllers
 
             if (response.IsSuccess)
             {
-                _flashMessage.Info("The instructions to allow you user has been sent to email");                
+                _flashMessage.Info("The instructions to allow you user has been sent to email");
             }
             else
             {
@@ -120,7 +120,7 @@ namespace School.Controllers
             }
             return RedirectToAction("Index", "Users");
         }
-               
+
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
             if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
@@ -140,7 +140,30 @@ namespace School.Controllers
                 return NotFound();
             }
 
-            return View();
+            var model = new CreatePasswordViewModel
+            {
+                UserId = userId,
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ConfirmEmail(CreatePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByIdAsync(model.UserId);
+                var myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+                var result = await _userHelper.ResetPasswordAsync(user, myToken, model.Password);
+                if (result.Succeeded)
+                {
+                    _flashMessage.Info("Password created successful");
+                    return RedirectToAction("Login", "Account");
+                }
+                _flashMessage.Info("Password cannot be created, try again");
+                return View(model);
+            }
+            return View(model);
         }
 
         public IActionResult RecoverPassword()

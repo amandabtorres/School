@@ -22,10 +22,16 @@ namespace School.Helpers
             _roleManager = roleManager;
         }
 
-        public async Task<IdentityResult> AddUserAsync(User user, string password)
+        public async Task<IdentityResult> AddUserAsync(User user)
+        {
+            return await _userManager.CreateAsync(user);
+        }
+
+        public async Task<IdentityResult> AddUserWithPasswordAsync(User user, string password)
         {
             return await _userManager.CreateAsync(user, password);
         }
+
 
         public async Task<User> GetUserByEmailAsync(string email)
         {
@@ -124,19 +130,13 @@ namespace School.Helpers
             return await _userManager.ResetPasswordAsync(user, token, password);
         }
 
-
-        //----------------------
-
-
         public async Task<SignInResult> ValidatePasswordAsync(User user, string password)
         {
             return await _signInManager.CheckPasswordSignInAsync(
                 user,
                 password,
                 false);
-        }
-
-        
+        }             
 
         public async Task<bool> IsUserInRoleAsync(User user, string roleName)
         {

@@ -41,16 +41,7 @@ namespace School.Models
         [Required]
         [MaxLength(10, ErrorMessage = "The field {0} only can contain {1} characters length.")]
         public string Nif { get; set; }
-
-        [Required]
-        [MinLength(6)]
-        public string Password { get; set; }
-
-        [Required]
-        [Compare("Password")]
-        public string Confirm { get; set; }
-
-        
+                
         [Display(Name = "Role")]       
         [Required(AllowEmptyStrings = false)]
         public string RoleId { get; set; }

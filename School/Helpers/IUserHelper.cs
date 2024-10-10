@@ -12,7 +12,8 @@ namespace School.Helpers
 
         Task<User> GetUserByIdAsync(string userId);
 
-        Task<IdentityResult> AddUserAsync(User user, string password);
+        Task<IdentityResult> AddUserWithPasswordAsync(User user, string password);
+        Task<IdentityResult> AddUserAsync(User user);
 
         Task<SignInResult> LoginAsync(LoginViewModel model);
 
