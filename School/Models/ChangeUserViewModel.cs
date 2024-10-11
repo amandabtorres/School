@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using School.Data.Entities;
 using System.ComponentModel.DataAnnotations;
 
 namespace School.Models
 {
-    public class ChangeUserViewModel
+    public class ChangeUserViewModel 
     {
 
         [Required]
@@ -43,6 +44,11 @@ namespace School.Models
         [MaxLength(10, ErrorMessage = "The field {0} only can contain {1} characters length.")]
         public string Nif { get; set; }
 
-      
+        [Display(Name = "Image")]      
+        public Guid ImageId { get; set; }
+        public IFormFile? ImageFile { get; set; }
+        public string ImageFullPath => ImageId == Guid.Empty
+            ? $"https://schoolprojectweb.azurewebsites.net/images/users/noimage.png"
+            : $"https://schoolprojectweb.blob.core.windows.net/users/{ImageId}";
     }
 }

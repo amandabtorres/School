@@ -17,15 +17,18 @@ namespace School.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IUserHelper _userHelper;
         private readonly IFlashMessage _flashMessage;
+        private readonly IBlobHelper _blobHelper;
 
         public UsersController(
             IUserRepository userRepository, 
             IUserHelper userHelper,
-            IFlashMessage flashMessage)
+            IFlashMessage flashMessage,
+            IBlobHelper blobHelper)
         {
             _userRepository = userRepository;
             _userHelper = userHelper;
             _flashMessage = flashMessage;
+            _blobHelper = blobHelper;
         }
         [Authorize(Roles = "Employee, Admin")]
         public IActionResult Index()
@@ -49,10 +52,22 @@ namespace School.Controllers
             model.Roles = _userHelper.GetComboRoles();
             if (ModelState.IsValid)
             {
+                var selectedRole = model.Roles.FirstOrDefault(r => r.Value == model.RoleId.ToString());
+                if (selectedRole.Text == "Student" && model.ImageFile == null)
+                {
+                    _flashMessage.Danger("For students it is necessary to add a photo...");
+                    return View(model);
+                }
+                Guid imageId = Guid.Empty;               
+                if (model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users"); 
+                }
+
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);
                 if (user == null)
                 {
-                    var selectedRole = model.Roles.FirstOrDefault(r => r.Value == model.RoleId.ToString());
+
                     string roleUser = selectedRole.Text;
 
                     user = new User
@@ -65,7 +80,8 @@ namespace School.Controllers
                         Address = model.Address,
                         PhoneNumber = model.PhoneNumber,
                         PostalCode = model.PostalCode,
-                        Nif = model.Nif
+                        Nif = model.Nif,
+                        ImageId = imageId,
                     };
 
                     var result = await _userHelper.AddUserAsync(user);
@@ -82,10 +98,10 @@ namespace School.Controllers
                 }
                 _flashMessage.Danger("The user is already being used.");
                 return View(model);
-            }            
+            }
             return View(model);
         }
-                
+
 
         [HttpGet]
         public async  Task<IActionResult> Edit(string id)
@@ -107,7 +123,8 @@ namespace School.Controllers
                 model.Address = user.Address;
                 model.PhoneNumber = user.PhoneNumber;
                 model.PostalCode = user.PostalCode;
-                model.Nif = user.Nif;              
+                model.Nif = user.Nif; 
+                model.ImageId = user.ImageId;
 
                 return View(model);
             }
@@ -119,6 +136,11 @@ namespace School.Controllers
         {            
             if (ModelState.IsValid)
             {
+                Guid imageId = (Guid)model.ImageId;
+                if(model.ImageFile != null && model.ImageFile.Length > 0)
+                {
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
+                }
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);                    
                 user.FirstName = model.FirstName;
                 user.LastName = model.LastName;
@@ -127,6 +149,7 @@ namespace School.Controllers
                 user.PhoneNumber = model.PhoneNumber;
                 user.PostalCode = model.PostalCode;
                 user.Nif = model.Nif;
+                user.ImageId = imageId;
                
                 var response = await _userHelper.UpdateUserAsync(user);
                 if (response.Succeeded)
@@ -171,6 +194,20 @@ namespace School.Controllers
             return RedirectToAction("Index");
         }
 
+        public async Task<IActionResult> Details (string? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var user = await _userHelper.GetUserByIdAsync(id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
 
     }
 }

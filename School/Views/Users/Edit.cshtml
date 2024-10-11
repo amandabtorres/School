@@ -9,9 +9,10 @@
 <br />
 <div class="row">
     <div class="col-md-4 offset-md-4">
-        <form method="post" asp-action="Edit">
+        <form method="post" asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly"></div>       
             <input type="hidden" asp-for="Username" />
+            <input type="hidden" asp-for="ImageId" />
 
             <div class="form-group">
                 <label asp-for="FirstName">First Name</label>
@@ -23,6 +24,14 @@
                 <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-warning"></span>
             </div>
+            @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee")))
+            {
+                <div class="form-group">
+                    <label asp-for="ImageFile" class="control-label" />
+                    <input asp-for="ImageFile" class="form-control" type="file" />
+                    <span asp-validation-for="ImageFile" class="text-danger"></span>
+                </div>                
+            }            
             <div class="form-group">
                 <label asp-for="DateBirth" class="control-label"></label>
                 <div class="input-group date" date-provide="datepicker">
@@ -66,6 +75,9 @@
                 }
             </div>
         </form>
+    </div>
+    <div class="col-md-4">        
+        <img src="@Url.Content(Model.ImageFullPath)" alt="image" style="width:300px;height450px;max-width:100%;height:auto" />       
     </div>
 </div>
 

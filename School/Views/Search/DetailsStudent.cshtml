@@ -54,6 +54,12 @@
             </dd> 
         </dl>
     </div>
+    <div class="col-md-4">
+        @if (!string.IsNullOrEmpty(Model.User.ImageFullPath))
+        {
+            <img src="@Url.Content(Model.User.ImageFullPath)" alt="image" style="width:300px;height450px;max-width:100%;height:auto" />
+        }
+    </div>
 </div>
 <h3>Classes</h3>
 <br/>

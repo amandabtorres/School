@@ -1,4 +1,5 @@
 ﻿using School.Data.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace School.Models
 {
@@ -7,5 +8,6 @@ namespace School.Models
         public User User { get; set; }       
 
         public IEnumerable<SubjectsClassDetail> Subjects { get; set; }
+        
     }
 }

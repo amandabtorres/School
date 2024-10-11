@@ -61,7 +61,7 @@ namespace School.Controllers
             var model = new DetailsStudentViewModel
             {
                 User = student,                
-                ClassesOfStudent = listClasses
+                ClassesOfStudent = listClasses,                
             };
             return View(model);
         }
@@ -84,7 +84,7 @@ namespace School.Controllers
             var model = new DetailsTeacherViewModel
             {
                 User = teacher,
-                Subjects = listSCD
+                Subjects = listSCD,                
             };
             return View(model);
         }
