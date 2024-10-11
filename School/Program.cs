@@ -32,7 +32,7 @@ namespace School
             //Inject datacontext
             builder.Services.AddDbContext<DataContext>(o =>
             {
-                o.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection"));
+                o.UseSqlServer(builder.Configuration.GetConnectionString("LocalConnection")); //DefaultConnection
             });
 
             builder.Services.AddFlashMessage();
@@ -40,11 +40,13 @@ namespace School
             builder.Services.AddTransient<SeedDb>();
             builder.Services.AddScoped<ISubjectRepository, SubjectRepository>();
             builder.Services.AddScoped<IClassSchoolRepository, ClassSchoolRepository>();
-            builder.Services.AddScoped<IStudentsClassDetailRepository, StudentsClassDetailRepository>();
-            
+            builder.Services.AddScoped<IStudentsClassDetailRepository, StudentsClassDetailRepository>();            
             builder.Services.AddScoped<IUserRepository, UserRepository>();
+
             builder.Services.AddScoped<IMailHelper, MailHelper>();
             builder.Services.AddScoped<IUserHelper, UserHelper>();
+            builder.Services.AddScoped<IBlobHelper, BlobHelper>();
+
 
             builder.Services.ConfigureApplicationCookie(options =>
             {

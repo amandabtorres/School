@@ -17,15 +17,18 @@ namespace School.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IUserHelper _userHelper;
         private readonly IFlashMessage _flashMessage;
+        private readonly IBlobHelper _blobHelper;
 
         public UsersController(
             IUserRepository userRepository, 
             IUserHelper userHelper,
-            IFlashMessage flashMessage)
+            IFlashMessage flashMessage,
+            IBlobHelper blobHelper)
         {
             _userRepository = userRepository;
             _userHelper = userHelper;
             _flashMessage = flashMessage;
+            _blobHelper = blobHelper;
         }
         [Authorize(Roles = "Employee, Admin")]
         public IActionResult Index()
@@ -55,24 +58,12 @@ namespace School.Controllers
                     _flashMessage.Danger("For students it is necessary to add a photo...");
                     return View(model);
                 }
-                var path = string.Empty;
+                Guid imageId = Guid.Empty;               
                 if (model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    var guid = Guid.NewGuid().ToString();
-                    var file = $"{guid}.jpg";
-
-                    path = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "wwwroot\\images\\users",
-                        file);
-
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await model.ImageFile.CopyToAsync(stream);
-                    }
-                    path = $"~/images/users/{file}";
-
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users"); 
                 }
+
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);
                 if (user == null)
                 {
@@ -90,7 +81,7 @@ namespace School.Controllers
                         PhoneNumber = model.PhoneNumber,
                         PostalCode = model.PostalCode,
                         Nif = model.Nif,
-                        ImageUrl = path,
+                        ImageId = imageId,
                     };
 
                     var result = await _userHelper.AddUserAsync(user);
@@ -133,7 +124,7 @@ namespace School.Controllers
                 model.PhoneNumber = user.PhoneNumber;
                 model.PostalCode = user.PostalCode;
                 model.Nif = user.Nif; 
-                model.ImageUrl = user.ImageUrl;
+                model.ImageId = user.ImageId;
 
                 return View(model);
             }
@@ -145,22 +136,10 @@ namespace School.Controllers
         {            
             if (ModelState.IsValid)
             {
-                var path = model.ImageUrl;
+                Guid imageId = (Guid)model.ImageId;
                 if(model.ImageFile != null && model.ImageFile.Length > 0)
                 {
-                    var guid = Guid.NewGuid().ToString();
-                    var file = $"{guid}.jpg";
-
-                    path = Path.Combine(
-                        Directory.GetCurrentDirectory(),
-                        "wwwroot\\images\\users",
-                        file);
-
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await model.ImageFile.CopyToAsync(stream);
-                    }
-                    path = $"~/images/users/{file}";
+                    imageId = await _blobHelper.UploadBlobAsync(model.ImageFile, "users");
                 }
                 var user = await _userHelper.GetUserByEmailAsync(model.Username);                    
                 user.FirstName = model.FirstName;
@@ -170,7 +149,7 @@ namespace School.Controllers
                 user.PhoneNumber = model.PhoneNumber;
                 user.PostalCode = model.PostalCode;
                 user.Nif = model.Nif;
-                user.ImageUrl = path;
+                user.ImageId = imageId;
                
                 var response = await _userHelper.UpdateUserAsync(user);
                 if (response.Succeeded)

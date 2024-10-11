@@ -24,22 +24,15 @@ namespace School.Data.Entities
 
         public string Nif { get; set; }
 
-        public string? ImageUrl { get; set; }
+        public Guid ImageId { get; set; }
 
         [Display(Name = "Full Name")]
         public string FullName => $"{FirstName} {LastName}";
 
-        public string ImageFullPath
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(ImageUrl))
-                {
-                    return null;
-                }
-                return $"https://localhost:7249{ImageUrl.Substring(1)}";
-            }
-        }
+        public string ImageFullPath => ImageId == Guid.Empty
+            ? $"https://schoolprojectweb.azurewebsites.net/images/users/noimage.png"
+            : $"https://schoolprojectweb.blob.core.windows.net/users/{ImageId}";
+        
 
     }
 }

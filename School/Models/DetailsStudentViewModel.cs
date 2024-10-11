@@ -7,9 +7,6 @@ namespace School.Models
     {
         public User User { get; set; }              
 
-        public IEnumerable<ClassSchool> ClassesOfStudent { get; set; }
-
-        [Display(Name = "Image")]
-        public string? ImageUrl { get; set; }
+        public IEnumerable<ClassSchool> ClassesOfStudent { get; set; }       
     }
 }

@@ -48,6 +48,8 @@ namespace School.Models
 
         public IEnumerable<SelectListItem>? Roles { get; set; }
 
+        public Guid? ImageId { get; set; }
+
         [Display(Name = "Image")]
         public IFormFile? ImageFile { get; set; }
     }

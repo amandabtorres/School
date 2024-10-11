@@ -12,7 +12,7 @@
         <form method="post" asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly"></div>       
             <input type="hidden" asp-for="Username" />
-            <input type="hidden" asp-for="ImageUrl" />
+            <input type="hidden" asp-for="ImageId" />
 
             <div class="form-group">
                 <label asp-for="FirstName">First Name</label>
@@ -76,11 +76,8 @@
             </div>
         </form>
     </div>
-    <div class="col-md-4">
-        @if(!string.IsNullOrEmpty(Model.ImageUrl))
-        {
-            <img src="@Url.Content(Model.ImageUrl)" alt="image" style="width: 300px;height450px;max-width:100%;height:auto"/>
-        }
+    <div class="col-md-4">        
+        <img src="@Url.Content(Model.ImageFullPath)" alt="image" style="width:300px;height450px;max-width:100%;height:auto" />       
     </div>
 </div>
 

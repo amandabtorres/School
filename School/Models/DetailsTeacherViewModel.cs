@@ -8,8 +8,6 @@ namespace School.Models
         public User User { get; set; }       
 
         public IEnumerable<SubjectsClassDetail> Subjects { get; set; }
-
-        [Display(Name = "Image")]
-        public string? ImageUrl { get; set; }
+        
     }
 }
