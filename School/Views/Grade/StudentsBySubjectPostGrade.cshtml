@@ -13,7 +13,7 @@
     <a asp-action="Index" class="btn btn-success">Back </a>
 </p>
 
-<table class="display" id="myTable" style="width:100%">
+<table class="display" id="myTable" style="width:60%">
     <thead>
         <tr>
             <th>
@@ -37,7 +37,7 @@
                     @Html.DisplayFor(modelItem => item.Grade)
                 </td>
                 <td class="align-input-grade">
-                    <input type="number" id="grade-input-@item.Id" class="form-control decimal-input small-input" step="0,01" maxlength="4"/>
+                    <input type="number" id="grade-input-@item.Id" class="form-control decimal-input small-input"  step="0,01"/>
                 </td>                
                 <td>                    
                     <button type="button" onclick="updateGrade(@item.Id)" class="btn btn-success">
@@ -57,7 +57,7 @@
     <script type="text/javascript">
         function updateGrade(itemId) {
             var newGradeInput = $("#grade-input-" + itemId).val();
-            var newGrade = newGradeInput.replace(".", ",");
+            var newGrade = newGradeInput.replace(",", ".");
             
             if (newGrade < 0 || newGrade > 20) {
                 alert("Por favor, digite uma nota entre 0 e 20.");

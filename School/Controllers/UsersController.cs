@@ -123,7 +123,7 @@ namespace School.Controllers
                 model.Address = user.Address;
                 model.PhoneNumber = user.PhoneNumber;
                 model.PostalCode = user.PostalCode;
-                model.Nif = user.Nif; 
+                model.Nif = user.Nif;
                 model.ImageId = user.ImageId;
 
                 return View(model);
