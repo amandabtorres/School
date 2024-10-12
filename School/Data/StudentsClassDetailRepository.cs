@@ -15,6 +15,26 @@ namespace School.Data
             _userHelper = userHelper;
         }
 
+        public async Task<Response> DecreaseAbsenceAsync(int id, int qtd)
+        {
+            try
+            {
+                var studentClassDetail = await _context.StudentsClassDetails.FindAsync(id);
+                if (studentClassDetail != null)
+                {
+                    studentClassDetail.Absence -= qtd;
+                    _context.StudentsClassDetails.Update(studentClassDetail);
+                    await _context.SaveChangesAsync();
+                    return new Response { IsSuccess = true };
+                }
+                return new Response { IsSuccess = false };
+            }
+            catch (Exception ex)
+            {
+                return new Response { Message = "An error occurred in the process: " + ex.Message, IsSuccess = false };
+            }
+        }
+
         public async Task<IEnumerable<ClassSchool>> GetClassesSchoolByStudent(User user)
         {
             return await _context.StudentsClassDetails
@@ -66,6 +86,26 @@ namespace School.Data
                 .Include(c=> c.ClassSchool)
                 .Include(t=> t.Teacher)
                 .Where(u=> u.TeacherId == user.Id).ToListAsync();
+        }
+
+        public async Task<Response> IncreaseAbsenceAsync(int id, int qtd)
+        {
+            try
+            {
+                var studentClassDetail = await _context.StudentsClassDetails.FindAsync(id);
+                if (studentClassDetail != null)
+                {
+                    studentClassDetail.Absence += qtd;
+                    _context.StudentsClassDetails.Update(studentClassDetail);
+                    await _context.SaveChangesAsync();
+                    return new Response { IsSuccess = true };
+                }
+                return new Response { IsSuccess = false };
+            }
+            catch (Exception ex)
+            {
+                return new Response { Message = "An error occurred in the process: " + ex.Message, IsSuccess = false };
+            }
         }
 
         public async Task<Response> SaveGradeAsync(int id, decimal grade)

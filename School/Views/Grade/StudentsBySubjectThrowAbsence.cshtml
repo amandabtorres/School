@@ -1,0 +1,121 @@
+﻿@model IEnumerable<School.Data.Entities.StudentsClassDetail>
+
+@{
+	ViewData["Title"] = "Students in subject";
+}
+
+<link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
+
+<h3>Students in subject's class:</h3>
+<flash dismissable="true" />
+<br/>
+<p>   
+    <a asp-action="Index" class="btn btn-success">Back </a>
+</p>
+
+<table class="display" id="myTable" style="width:40%">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Student.FullName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Absence)
+            </th>  
+            <th></th>     
+            <th>
+                Throw absence
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Student.FullName)
+                </td>
+                <td id="student-grade-@item.Id">
+                    @Html.DisplayFor(modelItem => item.Absence)
+                </td>
+                <td>
+                    <button type="button" onclick="decreaseAbsence(@item.Id)" class="btn btn-success">
+                        <i class="fa-solid fa-minus"></i>
+                    </button>                   
+                </td>
+                <td>                    
+                    <input type="number" id="absence-input-@item.Id" class="form-control small-input" />                    
+                </td>
+                <td>                    
+                    <button type="button" onclick="increaseAbsence(@item.Id)" class="btn btn-success">
+                        <i class="fa-solid fa-plus"></i>
+                    </button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    @{ await Html.RenderPartialAsync("_ValidationCurrencyPartial");   }
+    <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>
+    <script type="text/javascript">
+        function increaseAbsence(itemId) {
+            var absence = $("#absence-input-" + itemId).val();
+            
+            $('#absence-input-' + itemId).prop('disabled', true); // Desabilita o input
+
+            $.ajax({
+                url: "/Grade/IncreaseAbsence",
+                type: "POST",
+                data: { id: itemId, qtd: absence },
+                success: function (response) {
+                    if (response.success) {                        
+                        window.location.reload();
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                    // Reativar o input
+                    $('#absence-input-' + itemId).prop('disabled', false);
+                },
+                error: function () {
+                    alert("An error occurred while updating.");
+                    // Reativar o input
+                    $('#absence-input-' + itemId).prop('disabled', false);
+                }
+            });
+        }
+        function decreaseAbsence(itemId) {
+            var absence = $("#absence-input-" + itemId).val();
+
+            $('#absence-input-' + itemId).prop('disabled', true); // Desabilita o input
+
+            $.ajax({
+                url: "/Grade/DecreaseAbsence",
+                type: "POST",
+                data: { id: itemId, qtd: absence },
+                success: function (response) {
+                    if (response.success) {
+                        window.location.reload();
+                    } else {
+                        alert("Error: " + response.message);
+                    }
+                    // Reativar o input
+                    $('#absence-input-' + itemId).prop('disabled', false);
+                },
+                error: function () {
+                    alert("An error occurred while updating.");
+                    // Reativar o input
+                    $('#absence-input-' + itemId).prop('disabled', false);
+                }
+            });
+        }
+
+        $(document).ready(function () {
+            $('#myTable').DataTable();
+        });
+    </script>
+}

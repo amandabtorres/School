@@ -84,6 +84,9 @@
                     Grade
                 </th>
                 <th>
+                    Absence
+                </th>
+                <th>
                     Status
                 </th>
             </tr>
@@ -123,6 +126,7 @@
                             + '<td>' + scd.subjectsClassDetail.subject.name + '</td>'
                             +  '<td>' + scd.subjectsClassDetail.teacher.fullName + '</td>'
                             + '<td>' + (scd.grade == null ? '' : scd.grade) + '</td>'
+                            + '<td>' + scd.absence + '</td>'
                             + '<td>' + scd.status + '</td>'
                             + '</tr>' );
                     });

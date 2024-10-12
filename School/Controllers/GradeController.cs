@@ -30,7 +30,7 @@ namespace School.Controllers
             return View(list);
         }
 
-        public async Task<IActionResult> StudentsBySubjectPostGrade(int? id)
+        public async Task<IActionResult> StudentsBySubjectThrowGrade(int? id)
         {
             if(id == null)
             {
@@ -44,8 +44,7 @@ namespace School.Controllers
             var list = await _studentsClassDetailRepository.GetStudentsClassDetailsBySubjectClassDetailAsync(scd);
             return View(list);
         }
-
-       
+               
         public async Task<IActionResult> SaveGrade(int id, decimal grade)
         {
             Response result = await _studentsClassDetailRepository.SaveGradeAsync(id, grade);
@@ -56,8 +55,48 @@ namespace School.Controllers
             else
             {
                 return BadRequest(new { success = false, message = result.Message });
+            }            
+        }
+
+        public async Task<IActionResult> StudentsBySubjectThrowAbsence(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
             }
-            
+            var scd = _classSchoolRepository.GetSubjectClassDetail(id.Value);
+            if (scd == null)
+            {
+                return NotFound();
+            }
+            var list = await _studentsClassDetailRepository.GetStudentsClassDetailsBySubjectClassDetailAsync(scd);
+            return View(list);
+        }
+
+        public async Task<IActionResult> DecreaseAbsence(int id, int qtd)
+        {
+            Response result = await _studentsClassDetailRepository.DecreaseAbsenceAsync(id, qtd);
+            if (result.IsSuccess)
+            {
+                return Ok(new { success = true });
+            }
+            else
+            {
+                return BadRequest(new { success = false, message = result.Message });
+            }
+        }
+
+        public async Task<IActionResult> IncreaseAbsence(int id, int qtd)
+        {
+            Response result = await _studentsClassDetailRepository.IncreaseAbsenceAsync(id, qtd);
+            if (result.IsSuccess)
+            {
+                return Ok(new { success = true });
+            }
+            else
+            {
+                return BadRequest(new { success = false, message = result.Message });
+            }
         }
     }
 }

@@ -21,7 +21,10 @@
             </th>
             <th>
                 Grade
-            </th>            
+            </th> 
+            <th>
+                Absence
+            </th>
         </tr>
     </thead>
     <tbody>
@@ -31,9 +34,12 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Student.FullName)
                 </td>
-                <td id="student-grade-@item.Id">
+                <td>
                     @Html.DisplayFor(modelItem => item.Grade)
-                </td>                
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Absence)
+                </td>
             </tr>
         }
     </tbody>

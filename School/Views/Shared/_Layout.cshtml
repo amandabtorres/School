@@ -108,7 +108,7 @@
                             @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee")))
                             {
                                 <li class=" dropdown">
-                                    <a class="dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin</a>
+                                    <a class="dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Admin's Area</a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Users" asp-action="Index">Manage Users</a> </li>
                                         <li><a class="dropdown-item" asp-area="" asp-controller="Subjects" asp-action="Index">Manage Subjects</a> </li>
@@ -118,18 +118,13 @@
                             }
                             @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Teacher")))
                             {
-                                <li class=" dropdown">
-                                    <a class="dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">Grade</a>
-                                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                                        <li><a class="dropdown-item" asp-area="" asp-controller="Grade" asp-action="Index">Post grades</a> </li>
-                                    </ul>
-                                </li>
+                                <li><a asp-area="" asp-controller="Grade" asp-action="Index">Teacher's Area</a></li>                                
                             }
                             <li>
                                 <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                             </li>                            
                             @if (this.User.Identity.IsAuthenticated)
-                            {
+                            {                                 
                                 <li class="dropdown">
                                     <a class="dropdown-toggle" href="#" id="dropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fa-solid fa-user"></i> My Profile</a>
                                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
