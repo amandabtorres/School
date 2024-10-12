@@ -33,6 +33,10 @@
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.5" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Utils" Version="8.0.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Syncfusion.EJ2.AspNet.Core" Version="27.1.52" />
+    <PackageReference Include="Syncfusion.EJ2.JavaScript" Version="27.1.52" />
+    <PackageReference Include="Syncfusion.Licensing" Version="27.1.52" />
     <PackageReference Include="Vereyon.Web.FlashMessage" Version="3.0.0" />
     <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
   </ItemGroup>

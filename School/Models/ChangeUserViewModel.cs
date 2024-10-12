@@ -40,8 +40,7 @@ namespace School.Models
         [Display(Name = "Postal Code")]
         public string PostalCode { get; set; }
 
-        [Required]
-        [MaxLength(10, ErrorMessage = "The field {0} only can contain {1} characters length.")]
+        [Required]        
         public string Nif { get; set; }
 
         [Display(Name = "Image")]      
