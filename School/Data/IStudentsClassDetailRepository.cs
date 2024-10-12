@@ -10,6 +10,8 @@ namespace School.Data
         Task<IEnumerable<StudentsClassDetail>> GetStudentsClassDetailsBySubjectClassDetailAsync(SubjectsClassDetail scd);
 
         Task<Response> SaveGradeAsync(int id, decimal grade);
+        Task<Response> DecreaseAbsenceAsync(int id, int qtd);
+        Task<Response> IncreaseAbsenceAsync(int id, int qtd);
 
         Task<IEnumerable<StudentsClassDetail>> GetStudentClassDetailByClassStudentAsync(User user, int classId);
 

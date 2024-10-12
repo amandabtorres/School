@@ -180,6 +180,7 @@ namespace School.Data
                         {
                             StudentId = user.Id,
                             SubjectsClassDetailId = subjectClass.Id,
+                            Absence = 0,
                         };
                         await _context.StudentsClassDetails.AddAsync(scd);
                     };
