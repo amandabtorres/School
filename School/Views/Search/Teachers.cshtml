@@ -5,48 +5,48 @@
 
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
 
-<h2>Teachers in School</h2>
-<br />
-<table class="display" id="myTable" style="width:100%">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.FullName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateBirth)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee")))
-            {
-                <th>
-                    @Html.DisplayNameFor(model => model.Nif)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.PhoneNumber)
-                </th>
-                <th></th>
-            }            
-            
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
+@if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee")))
+{
+    <h2>Teachers in School</h2>
+    <br />
+    <table class="display" id="myTable" style="width:100%">
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.FullName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateBirth)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Email)
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.FullName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.DateBirth)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
                 @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee")))
                 {
+                    <th>
+                        @Html.DisplayNameFor(model => model.Nif)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.PhoneNumber)
+                    </th>
+                    <th></th>
+                }
+
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateBirth)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>                    
                     <td>
                         @Html.DisplayFor(modelItem => item.Nif)
                     </td>
@@ -55,12 +55,56 @@
                     </td>
                     <td>
                         <a asp-action="DetailsTeacher" asp-route-id="@item.Id" class="btn btn-info"><i class="fa-solid fa-list"></i></a>
-                    </td>
-                }               
-            </tr>
-        }
-    </tbody>
-</table>
+                    </td>                    
+                </tr>
+            }
+        </tbody>
+    </table>    
+}
+
+<!--reviews start -->
+<section id="reviews" class="reviews">
+    <div class="section-header">
+        <h2>Our Teachers</h2>
+        <p>Meet our team of teachers</p>
+    </div><!--/.section-header-->
+        <div class="reviews-content">
+            <div class="testimonial-carousel">   
+                @foreach (var item in Model)
+                {
+       
+                    <div class="single-testimonial-box">
+                        <div class="testimonial-description">
+                            <div class="testimonial-info">
+                                <div class="testimonial-img">
+                                    <img src="@Url.Content(item.ImageFullPath)" alt="teachers" />
+                                </div><!--/.testimonial-img-->
+                                <div class="testimonial-person">
+                                    <h2> @Html.DisplayFor(modelItem => item.FullName)</h2>
+                                    <h4>@Html.DisplayFor(modelItem => item.Email)</h4>
+                                    <div class="testimonial-person-star">
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                        <i class="fa fa-star"></i>
+                                    </div>
+                                </div><!--/.testimonial-person-->
+                            </div><!--/.testimonial-info-->
+                            <div class="testimonial-comment">
+                                <p>
+                                    Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Sed ut perspiciatis eaque.
+                                </p>
+                            </div><!--/.testimonial-comment-->
+                        </div><!--/.testimonial-description-->
+                    </div><!--/.single-testimonial-box-->           
+                }
+             </div>
+         </div>
+</section><!--/.reviews-->
+<!--reviews end -->
+
+
 
 @section Scripts {
     <script src="https://cdn.datatables.net/2.1.6/js/dataTables.js"></script>

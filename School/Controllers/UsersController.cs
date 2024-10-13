@@ -111,7 +111,7 @@ namespace School.Controllers
                 return NotFound();
             }
             var user = await _userHelper.GetUserByIdAsync(id);
-            if(!this.User.Identity.IsAuthenticated && this.User.Identity.Name != user.Email && !this.User.IsInRole("Admin") && !this.User.IsInRole("Employee"))
+            if(!this.User.Identity.IsAuthenticated || ( this.User.Identity.Name != user.Email && !this.User.IsInRole("Admin") && !this.User.IsInRole("Employee")))
             {
                 return Forbid();
             }

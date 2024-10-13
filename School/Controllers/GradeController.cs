@@ -78,6 +78,11 @@ namespace School.Controllers
             {
                 return NotFound();
             }
+            var user = await _userHelper.GetUserByIdAsync(scd.TeacherId);
+            if (this.User.Identity.Name != user.Email && !this.User.IsInRole("Admin"))
+            {
+                return Forbid();
+            }
             var list = await _studentsClassDetailRepository.GetStudentsClassDetailsBySubjectClassDetailAsync(scd);
             return View(list);
         }
