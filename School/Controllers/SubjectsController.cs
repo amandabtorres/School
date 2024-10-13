@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using School.Data;
 using School.Data.Entities;
 using School.Helpers;
+using Vereyon.Web;
 
 namespace School.Controllers
 {
@@ -16,11 +17,15 @@ namespace School.Controllers
     public class SubjectsController : Controller
     {
         private readonly ISubjectRepository _subjectRepository;
+        private readonly IFlashMessage _flashMessage;
 
-        public SubjectsController(ISubjectRepository subjectRepository)
+        public SubjectsController(
+            ISubjectRepository subjectRepository,
+            IFlashMessage flashMessage)
         {
            
             _subjectRepository = subjectRepository;
+            _flashMessage = flashMessage;
         }
 
         // GET: Subjects
@@ -141,6 +146,12 @@ namespace School.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var subject = await _subjectRepository.GetByIdAsync(id);
+            var result = _subjectRepository.IsSubjectInClass(subject);
+            if (result)
+            {
+                _flashMessage.Danger("The subject is included in a class and cannot be excluded...");
+                return RedirectToAction(nameof(Index));
+            }
             await _subjectRepository.DeleteAsync(subject);            
             return RedirectToAction(nameof(Index));
         }

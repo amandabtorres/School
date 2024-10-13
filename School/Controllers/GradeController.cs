@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using School.Data;
+using School.Data.Entities;
 using School.Helpers;
 using Vereyon.Web;
 
@@ -11,15 +12,18 @@ namespace School.Controllers
     {
         private readonly IStudentsClassDetailRepository _studentsClassDetailRepository;
         private readonly IClassSchoolRepository _classSchoolRepository;
+        private readonly IUserHelper _userHelper;
         private readonly IFlashMessage _flashMessage;
 
         public GradeController(
             IStudentsClassDetailRepository studentsClassDetailRepository,
             IClassSchoolRepository classSchoolRepository,
+            IUserHelper userHelper,
             IFlashMessage flashMessage)
         {
             _studentsClassDetailRepository = studentsClassDetailRepository;
             _classSchoolRepository = classSchoolRepository;
+            _userHelper = userHelper;
             _flashMessage = flashMessage;
         }
 
@@ -40,6 +44,11 @@ namespace School.Controllers
             if (scd == null) 
             {
                 return NotFound();
+            }
+            var user = await _userHelper.GetUserByIdAsync(scd.TeacherId);
+            if (this.User.Identity.Name != user.Email && !this.User.IsInRole("Admin"))
+            {
+                return Forbid();
             }
             var list = await _studentsClassDetailRepository.GetStudentsClassDetailsBySubjectClassDetailAsync(scd);
             return View(list);

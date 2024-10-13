@@ -3,7 +3,14 @@
     ViewData["Title"] = "DetailsStudent";
 }
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
+@if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee") || this.User.IsInRole("Teacher")))
+{
+    <div>
+        <a asp-action="Students" class="btn btn-success">Back to List</a>
+    </div>    
+}
 
+<br />
 <h1>Details Student</h1>
 <hr />
 <input type="hidden" id="userId" value="@Model.User.Id" />

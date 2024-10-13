@@ -859,7 +859,7 @@ nav.navbar.bootsnav .navbar-toggle i{color: #DAA520;}
         12. Footer
 --------------------------------------*/
 .footer-layout {
-    position: fixed;
+    position: relative;
     padding-top: 20px;
     bottom: 0;
     width: 100%;

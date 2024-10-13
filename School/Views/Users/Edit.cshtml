@@ -34,9 +34,9 @@
             }            
             <div class="form-group">
                 <label asp-for="DateBirth" class="control-label"></label>
-                <div class="input-group date" date-provide="datepicker">
+                <div class="input-group date" date-provide="datepicker"> 
                     <input type="text" asp-for="DateBirth" class="form-control" />
-                    <div class="input-group-append">
+                    <div class="input-group-append">                        
                         <span class="input-group-text"><i class="fas fa-calendar-alt"></i></span>
                     </div>
                     <span asp-validation-for="DateBirth" class="text-danger"></span>
@@ -85,8 +85,6 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
-
     <script type="text/javascript">
         $(document).ready(function() {
             $('.date').datepicker({

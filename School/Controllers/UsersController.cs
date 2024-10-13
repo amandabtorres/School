@@ -102,17 +102,20 @@ namespace School.Controllers
             return View(model);
         }
 
-
+        
         [HttpGet]
         public async  Task<IActionResult> Edit(string id)
-        {
-            if(id == null)
+        {            
+            if (id == null)
             {
                 return NotFound();
             }
+            var user = await _userHelper.GetUserByIdAsync(id);
+            if(!this.User.Identity.IsAuthenticated && this.User.Identity.Name != user.Email && !this.User.IsInRole("Admin") && !this.User.IsInRole("Employee"))
+            {
+                return Forbid();
+            }
 
-            var user = await _userHelper.GetUserByIdAsync(id);              
-                
             var model = new ChangeUserViewModel();
             if (user != null)
             {
@@ -190,6 +193,12 @@ namespace School.Controllers
         public async Task<IActionResult> DeleteConfirmed(string id)
         {
             var user = await _userHelper.GetUserByIdAsync(id);
+            var result = await _userRepository.IsUserInClass(user);
+            if (result)
+            {
+                _flashMessage.Danger("The user is included in a class and cannot be excluded...");
+                return RedirectToAction("Index", "Users");
+            }
             await _userHelper.DeleteUserAsync(user); 
             return RedirectToAction("Index");
         }

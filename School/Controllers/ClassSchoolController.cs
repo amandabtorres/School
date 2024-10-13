@@ -9,7 +9,7 @@ using Vereyon.Web;
 
 namespace School.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "Employee, Admin")]
     public class ClassSchoolController : Controller
     {
         private readonly IClassSchoolRepository _classSchoolRepository;
@@ -138,6 +138,13 @@ namespace School.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
+            var listSubjects = await _classSchoolRepository.GetSubjectsInClassAsync(id);
+            var studentsInClass = await _classSchoolRepository.GetStudentsInClassAsync(id);
+            if(listSubjects.Count() > 0 || studentsInClass.Count() > 0)
+            {
+                _flashMessage.Danger("It is not possible to delete a class that already contains students or subjects!");
+                return RedirectToAction(nameof(Index));
+            }
             var classSchool = await _classSchoolRepository.GetByIdAsync(id);
             await _classSchoolRepository.DeleteAsync(classSchool);
             return RedirectToAction(nameof(Index));

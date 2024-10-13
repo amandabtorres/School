@@ -230,6 +230,10 @@ namespace School.Controllers
 
         public async Task<IActionResult> ChangeUser()
         {
+            if (!this.User.Identity.IsAuthenticated)
+            {
+                return NotFound();
+            }
             var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
             var userId = user.Id;
 

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
+using System.ComponentModel.DataAnnotations;
 
 namespace School.Data.Entities
 {
@@ -26,6 +27,7 @@ namespace School.Data.Entities
 
         private bool IsApprovedByPresence()
         {
+            Absence =  Absence == null ? 0 : Absence;
             double percentagemAbsence = ((double)Absence / (double)SubjectsClassDetail.Subject.Workload) * 100;
             if (percentagemAbsence > (100 - SubjectsClassDetail.Subject.AttendancePercentageMin))
             {

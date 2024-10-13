@@ -12,6 +12,7 @@ namespace School.Data
 
         Task<IEnumerable<User>> GetUserByRoleInSchool(string roleName);
 
+        Task<bool> IsUserInClass(User user);
 
     }
 }

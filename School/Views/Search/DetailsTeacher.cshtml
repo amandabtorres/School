@@ -4,7 +4,10 @@
 }
 
 <link rel="stylesheet" href="https://cdn.datatables.net/2.1.6/css/dataTables.dataTables.css" />
-
+<div>
+    <a asp-action="Teachers" class="btn btn-success">Back to List</a>
+</div>
+<br />
 <h1>Details Teacher</h1>
 <hr />
 <div class="row">
@@ -55,10 +58,9 @@
         </dl>
     </div>
     <div class="col-md-4">
-        @if (!string.IsNullOrEmpty(Model.User.ImageFullPath))
-        {
-            <img src="@Url.Content(Model.User.ImageFullPath)" alt="image" style="width:300px;height450px;max-width:100%;height:auto" />
-        }
+        
+         <img src="@Url.Content(Model.User.ImageFullPath)" alt="image" style="width:300px;height450px;max-width:100%;height:auto" />
+        
     </div>
 </div>
 <br />

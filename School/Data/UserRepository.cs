@@ -8,11 +8,14 @@ namespace School.Data
     public class UserRepository : IUserRepository
     {
         private readonly DataContext _context;
+        private readonly IStudentsClassDetailRepository _studentsClassDetailRepository;
 
-
-        public UserRepository(DataContext context)
+        public UserRepository(
+            DataContext context,
+            IStudentsClassDetailRepository studentsClassDetailRepository)
         {
             _context = context;
+            _studentsClassDetailRepository = studentsClassDetailRepository;
         }        
         public IEnumerable<User> GetAll()
         {
@@ -63,7 +66,15 @@ namespace School.Data
             return await _context.Users.Where(u => listId.Contains(u.Id)).ToListAsync();
         }
 
-
-
+        public async Task<bool> IsUserInClass(User user)
+        {
+            var list = await _studentsClassDetailRepository.GetClassesSchoolByStudent(user);
+            var listTeacher = await _studentsClassDetailRepository.GetSubjectsClassDetailByTeacherAsync(user.Email);
+            if(list.Count() > 0 || listTeacher.Count() > 0)
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }
