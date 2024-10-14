@@ -8,11 +8,16 @@ namespace School.Data
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;
+        private readonly IClassSchoolRepository _classSchoolRepository;
 
-        public StudentsClassDetailRepository(DataContext context, IUserHelper userHelper) : base(context)
+        public StudentsClassDetailRepository(
+            DataContext context, 
+            IUserHelper userHelper,
+            IClassSchoolRepository classSchoolRepository) : base(context)
         {
             _context = context;
             _userHelper = userHelper;
+            _classSchoolRepository = classSchoolRepository;
         }
 
         public async Task<Response> DecreaseAbsenceAsync(int id, int qtd)
@@ -53,6 +58,21 @@ namespace School.Data
                 .ThenInclude(s=> s.Subject)               
                 .Where(u=> u.StudentId == user.Id && u.SubjectsClassDetail.ClassSchoolId == classId)
                 .ToListAsync();               
+        }
+
+        public async Task<IEnumerable<StudentsClassDetail>> GetStudentsClassDetailsByIdSubjectClassDetailAsync(int idScd)
+        {
+            var scd = _classSchoolRepository.GetSubjectClassDetail(idScd);
+            if(scd == null)
+            {
+               return Enumerable.Empty<StudentsClassDetail>();
+            }
+            return await _context.StudentsClassDetails
+                .Include(scd=> scd.SubjectsClassDetail).ThenInclude(s => s.Subject)
+                .Include(scd => scd.SubjectsClassDetail).ThenInclude(t=> t.Teacher)                
+                .Include(s => s.Student)
+                .Where(s => s.SubjectsClassDetailId == scd.Id)
+                .ToListAsync();
         }
 
         public async Task<IEnumerable<StudentsClassDetail>> GetStudentsClassDetailsBySubjectClassDetailAsync(SubjectsClassDetail scd)

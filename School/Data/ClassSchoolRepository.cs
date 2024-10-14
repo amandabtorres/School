@@ -129,7 +129,7 @@ namespace School.Data
             {
                 return null;
             }
-            return await _context.StudentsClassDetails
+            return await _context.StudentsClassDetails                
                 .Include(s => s.Student)
                 .Include(x => x.SubjectsClassDetail)
                 .Where(su => su.SubjectsClassDetail.ClassSchoolId == idClass)
