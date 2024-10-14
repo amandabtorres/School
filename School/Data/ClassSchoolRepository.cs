@@ -18,6 +18,11 @@ namespace School.Data
             _context = context;
         }             
 
+        /// <summary>
+        /// Obtem todas as disciplinas em uma determinada turma
+        /// </summary>
+        /// <param name="idClass">id da turma</param>
+        /// <returns>IEnumerable de SubjectsClassDetail</returns>
         public async Task<IEnumerable<SubjectsClassDetail>> GetSubjectsInClassAsync(int idClass)
         {
             var classSchool =  await _context.ClassSchool.FindAsync(idClass);
@@ -32,6 +37,11 @@ namespace School.Data
                 .Where(c => c.ClassSchoolId == classSchool.Id).AsNoTracking();
         }
 
+        /// <summary>
+        /// Obtem todas as disciplinas que nao estão em uma determinada turma
+        /// </summary>
+        /// <param name="idClass">id da turma</param>
+        /// <returns>IEnumerable do tipo SelectListItem para uma comboBox</returns>
         public async Task<IEnumerable<SelectListItem>> GetComboSubjectsNotInClassAsync(int idClass)
         {
             var classSchool = await _context.ClassSchool.FindAsync(idClass);
@@ -61,12 +71,22 @@ namespace School.Data
             return subjectsNotInClass;
         }       
 
+        /// <summary>
+        /// Obtem uma SubjectClassDetail através do id
+        /// </summary>
+        /// <param name="id">id da SubjectClassDetail</param>
+        /// <returns></returns>
         public SubjectsClassDetail GetSubjectClassDetail(int id)
         {
             return _context.SubjectsClassDetails.FirstOrDefault(s => s.Id == id);
         }
 
-
+        /// <summary>
+        /// Adiciona uma Disciplina em uma turma e cria para cada aluno na turma um StudentClassDetail referente a disciplina
+        /// </summary>
+        /// <param name="subjectClassDetail">SubjectClassDetail</param>
+        /// <param name="classSchool">Turma</param>
+        /// <returns>Response</returns>
         public async Task<Response> AddSubjectClassDetailInClass(SubjectsClassDetail subjectClassDetail, ClassSchool classSchool)
         {            
             try
@@ -102,6 +122,11 @@ namespace School.Data
             return new Response { IsSuccess = true, Message = "The subject was added to class" };
         }
 
+        /// <summary>
+        /// Remove a disciplina da turma, se a turma já iniciou não é possível remover
+        /// </summary>
+        /// <param name="scd">Displicina a ser removida</param>
+        /// <returns>Reponse com uma msg</returns>
         public async Task<Response> RemoveSubjectClassDetailAsync(SubjectsClassDetail scd)
         {           
             var classSchool = await _context.ClassSchool.FindAsync(scd.ClassSchoolId);
@@ -121,7 +146,11 @@ namespace School.Data
             return new Response { Message = "Subject was removed from class" };
         }
 
-
+        /// <summary>
+        /// Obtem todos os alunos que estao na turma atraves do id da turma
+        /// </summary>
+        /// <param name="idClass">Id da turma</param>
+        /// <returns>Todos os alunos da turma</returns>
         public async Task<IEnumerable<User>> GetStudentsInClassAsync(int idClass)
         {
             var classSchool = await _context.ClassSchool.FindAsync(idClass);
@@ -136,9 +165,13 @@ namespace School.Data
                 .GroupBy(s => s.StudentId)
                 .Select(g => g.First().Student) // Seleciona o primeiro aluno de cada grupo
                 .ToListAsync();
-
         }
 
+        /// <summary>
+        /// Obtem todos os alunos que não estão na turma referida
+        /// </summary>
+        /// <param name="idClass">Id da turma</param>
+        /// <returns>Alunos que não estão na turma</returns>
         public async Task<IEnumerable<User>> GetStudentsNotEnrolledInClassAsync(int idClass)
         {
             var classSchool = await _context.ClassSchool.FindAsync(idClass);
@@ -163,10 +196,15 @@ namespace School.Data
                 "and u.id not in (select t1.StudentId from StudentsClassDetails t1 inner join SubjectsClassDetails t2 on t1.SubjectsClassDetailId = t2.Id where t2.ClassSchoolId = " + idClass + ")";
 
             var list = await _context.Users.FromSql(FormattableStringFactory.Create(sqlQuery)).ToListAsync();
-
             return list;
         }
 
+        /// <summary>
+        /// Adiciona um aluno em uma turma especifica e cria StudentClassDetail para cada disciplina que já estiver na turma
+        /// </summary>
+        /// <param name="user">Aluno a ser add</param>
+        /// <param name="classSchool">Turma que será add o aluno</param>
+        /// <returns>Response</returns>
         public async Task<Response> AddStudentInClass(User user, ClassSchool classSchool)
         {
             try
@@ -202,6 +240,12 @@ namespace School.Data
             return new Response { IsSuccess = true, Message = "The student was added to class" };
         }
 
+        /// <summary>
+        /// Remove um aluno da turma e todos os seus detalhes criados referente a turma, porém se a turma já iniciou, não é possível remover
+        /// </summary>
+        /// <param name="user">Aluno a ser removido</param>
+        /// <param name="classSchool">Turma da qual o aluno será removido</param>
+        /// <returns>Response</returns>
         public async Task<Response> RemoveStudentInClass(User user, ClassSchool classSchool)
         {
             if(classSchool.StartDate < DateTime.Now)
@@ -221,7 +265,6 @@ namespace School.Data
             }
             catch (Exception ex)
             {
-
                 return new Response
                 {
                     IsSuccess = false,
@@ -229,8 +272,6 @@ namespace School.Data
                 };
             }
             return new Response { IsSuccess = true, Message = "The student was removed from class" };
-        }
-
-
+        }              
     }
 }

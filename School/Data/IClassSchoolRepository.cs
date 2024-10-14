@@ -22,6 +22,7 @@ namespace School.Data
 
         Task<Response> AddStudentInClass(User user, ClassSchool classSchool);
         Task<Response> RemoveStudentInClass(User user, ClassSchool classSchool);
+        
 
     }
 }

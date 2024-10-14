@@ -19,27 +19,12 @@ namespace School.Data
             _userHelper = userHelper;
             _classSchoolRepository = classSchoolRepository;
         }
-
-        public async Task<Response> DecreaseAbsenceAsync(int id, int qtd)
-        {
-            try
-            {
-                var studentClassDetail = await _context.StudentsClassDetails.FindAsync(id);
-                if (studentClassDetail != null)
-                {
-                    studentClassDetail.Absence -= qtd;
-                    _context.StudentsClassDetails.Update(studentClassDetail);
-                    await _context.SaveChangesAsync();
-                    return new Response { IsSuccess = true };
-                }
-                return new Response { IsSuccess = false };
-            }
-            catch (Exception ex)
-            {
-                return new Response { Message = "An error occurred in the process: " + ex.Message, IsSuccess = false };
-            }
-        }
-
+               
+        /// <summary>
+        /// Obtem todas as turma em que um aluno está
+        /// </summary>
+        /// <param name="user">Aluno</param>
+        /// <returns>Todas as turma que o aluno participa</returns>
         public async Task<IEnumerable<ClassSchool>> GetClassesSchoolByStudent(User user)
         {
             return await _context.StudentsClassDetails
@@ -49,6 +34,12 @@ namespace School.Data
                         .ToListAsync();                        
         }
 
+        /// <summary>
+        /// Obtem todos os detalhes de um aluno de acordo com sua turma, para mostrar materias e notas
+        /// </summary>
+        /// <param name="user">Aluno</param>
+        /// <param name="classId">Turma</param>
+        /// <returns>Detalhes do estudante</returns>
         public async Task<IEnumerable<StudentsClassDetail>> GetStudentClassDetailByClassStudentAsync(User user, int classId )
         {
             return await _context.StudentsClassDetails
@@ -60,6 +51,11 @@ namespace School.Data
                 .ToListAsync();               
         }
 
+        /// <summary>
+        /// Obtem todos os detalhes dos alunos de acordo com uma disciplina na turma atraves do seu ID
+        /// </summary>
+        /// <param name="idScd">id de uma disciplina na turma</param>
+        /// <returns>Detalhes dos estudantes na disciplina</returns>
         public async Task<IEnumerable<StudentsClassDetail>> GetStudentsClassDetailsByIdSubjectClassDetailAsync(int idScd)
         {
             var scd = _classSchoolRepository.GetSubjectClassDetail(idScd);
@@ -75,6 +71,11 @@ namespace School.Data
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Obtem todos os detalhes dos alunos de acordo com uma disciplina na turma
+        /// </summary>
+        /// <param name="scd">disciplina na turma</param>
+        /// <returns>Detalhes dos estudantes na disciplina</returns>
         public async Task<IEnumerable<StudentsClassDetail>> GetStudentsClassDetailsBySubjectClassDetailAsync(SubjectsClassDetail scd)
         {                      
             return await _context.StudentsClassDetails                
@@ -83,6 +84,11 @@ namespace School.Data
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Obtem todos as disciplinas que um professor leciona 
+        /// </summary>
+        /// <param name="userNameTeacher">username do professor</param>
+        /// <returns>IEnumerable de detalhes das disciplinas </returns>
         public async Task<IEnumerable<SubjectsClassDetail>> GetSubjectsClassDetailByTeacherAsync(string userNameTeacher)
         {
             var user = await _userHelper.GetUserByEmailAsync(userNameTeacher);
@@ -98,9 +104,7 @@ namespace School.Data
                .Include(c => c.ClassSchool)
                .Include(t => t.Teacher)
                .ToListAsync();
-
             }
-
             return await _context.SubjectsClassDetails
                 .Include(s=> s.Subject)
                 .Include(c=> c.ClassSchool)
@@ -108,6 +112,12 @@ namespace School.Data
                 .Where(u=> u.TeacherId == user.Id).ToListAsync();
         }
 
+        /// <summary>
+        /// Aumenta uma quantidade de faltas 
+        /// </summary>
+        /// <param name="id">Id do StudentClassDetail</param>
+        /// <param name="qtd">quantidade de falta</param>
+        /// <returns>Response</returns>
         public async Task<Response> IncreaseAbsenceAsync(int id, int qtd)
         {
             try
@@ -128,6 +138,38 @@ namespace School.Data
             }
         }
 
+        /// <summary>
+        /// Diminui uma quantidade de faltas 
+        /// </summary>
+        /// <param name="id">Id do StudentClassDetail</param>
+        /// <param name="qtd">quantidade de falta</param>
+        /// <returns>Response</returns>
+        public async Task<Response> DecreaseAbsenceAsync(int id, int qtd)
+        {
+            try
+            {
+                var studentClassDetail = await _context.StudentsClassDetails.FindAsync(id);
+                if (studentClassDetail != null)
+                {
+                    studentClassDetail.Absence -= qtd;
+                    _context.StudentsClassDetails.Update(studentClassDetail);
+                    await _context.SaveChangesAsync();
+                    return new Response { IsSuccess = true };
+                }
+                return new Response { IsSuccess = false };
+            }
+            catch (Exception ex)
+            {
+                return new Response { Message = "An error occurred in the process: " + ex.Message, IsSuccess = false };
+            }
+        }
+
+        /// <summary>
+        /// Salva a nota do aluno em uma disciplina de uma turma
+        /// </summary>
+        /// <param name="id">Student Class Detail</param>
+        /// <param name="grade">Nota</param>
+        /// <returns>Response</returns>
         public async Task<Response> SaveGradeAsync(int id, decimal grade)
         {
             try
@@ -145,8 +187,7 @@ namespace School.Data
             catch (Exception ex)
             {
                 return new Response { Message = "An error occurred in the process: " + ex.Message, IsSuccess = false };
-            }
-           
+            }           
         }
     }
 }

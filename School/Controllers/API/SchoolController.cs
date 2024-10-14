@@ -43,5 +43,12 @@ namespace School.Controllers.API
             return Ok(await _classSchoolRepository.GetSubjectsInClassAsync(idClass));
         }
 
+        [HttpGet]
+        public IActionResult GetClassSchoolDetails()
+        {
+            return Ok(_classSchoolRepository.GetAll());
+        }
+
+
     }
 }
