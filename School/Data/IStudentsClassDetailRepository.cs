@@ -8,6 +8,7 @@ namespace School.Data
         Task<IEnumerable<SubjectsClassDetail>> GetSubjectsClassDetailByTeacherAsync(string userNameTeacher);
 
         Task<IEnumerable<StudentsClassDetail>> GetStudentsClassDetailsBySubjectClassDetailAsync(SubjectsClassDetail scd);
+        Task<IEnumerable<StudentsClassDetail>> GetStudentsClassDetailsByIdSubjectClassDetailAsync(int idScd);
 
         Task<Response> SaveGradeAsync(int id, decimal grade);
         Task<Response> DecreaseAbsenceAsync(int id, int qtd);
