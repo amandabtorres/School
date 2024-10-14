@@ -20,18 +20,14 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Email)
+                </th>               
+                <th>
+                    @Html.DisplayNameFor(model => model.Nif)
                 </th>
-                @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee")))
-                {
-                    <th>
-                        @Html.DisplayNameFor(model => model.Nif)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.PhoneNumber)
-                    </th>
-                    <th></th>
-                }
-
+                <th>
+                    @Html.DisplayNameFor(model => model.PhoneNumber)
+                </th>
+                <th></th>   
             </tr>
         </thead>
         <tbody>
@@ -71,8 +67,7 @@
         <div class="reviews-content">
             <div class="testimonial-carousel">   
                 @foreach (var item in Model)
-                {
-       
+                {       
                     <div class="single-testimonial-box">
                         <div class="testimonial-description">
                             <div class="testimonial-info">

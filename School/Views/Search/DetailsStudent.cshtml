@@ -6,7 +6,7 @@
 @if (this.User.Identity.IsAuthenticated && (this.User.IsInRole("Admin") || this.User.IsInRole("Employee") || this.User.IsInRole("Teacher")))
 {
     <div>
-        <a asp-action="Students" class="btn btn-success">Back to List</a>
+        <a asp-action="Students" class="btn btn-success"><i class="fa fa-chevron-left"></i> Back to List</a>
     </div>    
 }
 

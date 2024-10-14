@@ -12,7 +12,7 @@ namespace School
     {
         public static void Main(string[] args)
         {
-           SyncfusionLicenseProvider.RegisterLicense("Mgo+DSMBPh8sVXJzS0d+WFlPd19dX2ZWfFN0QXNddVx3flVDcC0sT3RfQFliSX9Sd0NmXn1aeH1TRQ==");
+           SyncfusionLicenseProvider.RegisterLicense("Mgo+DSMBMAY9C3t2UlhhQlVMfV5AQmBIYVp/TGpJfl96cVxMZVVBJAtUQF1hTX9Td0FjXXxWdHdTRmNc");
 
             
             var builder = WebApplication.CreateBuilder(args);
